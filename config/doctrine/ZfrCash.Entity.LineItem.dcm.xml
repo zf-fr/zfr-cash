@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="ZfrCash\Entity\LineItem" table="cash_line_items" read-only="true">
+        <id name="id" type="integer">
+            <generator strategy="AUTO" />
+        </id>
+
+        <many-to-one field="invoice" target-entity="ZfrCash\Entity\Invoice" inversed-by="invoices">
+            <join-column on-delete="CASCADE" />
+        </many-to-one>
+        <field name="amount" type="integer" />
+        <field name="currency" type="string" length="3" />
+        <field name="description" type="string" length="1000" nullable="true" />
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,54 @@
+<?php
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license.
+ */
+
+use ZfrStripe\Client\StripeClient;
+
+return [
+    'zfr_cash' => [
+        /**
+         * Doctrine object manager key
+         */
+        // 'object_manager' => 'doctrine.entitymanager.orm_default',
+
+        /**
+         * Define if webhooks coming from Stripe should be validated
+         *
+         * If set to true, we do an additional requests for each webhook we receive from Stripe
+         * to make sure it is coming from trusted source. While this can generated lot of API
+         * calls to Stripe, this is very recommended for security
+         */
+        // 'validate_webhooks' => true,
+
+        /**
+         * Define if we must register built-in listeners to webhooks
+         *
+         * We currently register several listeners to keep the system in sync
+         */
+        // 'register_listeners' => true,
+
+        /**
+         * Your company's VAT country code (2-letters ISO code)
+         */
+        // 'vat_country' => '',
+
+        /**
+         * Your company's VAT number
+         */
+        // 'vat_number' => ''
+    ]
+];
