@@ -20,18 +20,30 @@ namespace ZfrCash\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfrCash\Options\ModuleOptions;
+use ZfrCash\Service\CardService;
+use ZfrStripe\Client\StripeClient;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class StripeCustomerServiceFactory implements FactoryInterface
+class CardServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        // TODO: Implement createService() method.
+        /** @var ModuleOptions $moduleOptions */
+        $moduleOptions = $serviceLocator->get(ModuleOptions::class);
+
+        /** @var \Doctrine\Common\Persistence\ObjectManager $objectManager */
+        $objectManager = $serviceLocator->get($moduleOptions->getObjectManager());
+
+        /** @var StripeClient $stripeClient */
+        $stripeClient = $serviceLocator->get(StripeClient::class);
+
+        return new CardService($objectManager, $stripeClient);
     }
 }

@@ -58,6 +58,21 @@ class CustomerService
     private $stripeClient;
 
     /**
+     * @param ObjectManager               $objectManager
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param StripeClient                $stripeClient
+     */
+    public function __construct(
+        ObjectManager $objectManager,
+        CustomerRepositoryInterface $customerRepository,
+        StripeClient $stripeClient
+    ) {
+        $this->objectManager      = $objectManager;
+        $this->customerRepository = $customerRepository;
+        $this->stripeClient       = $stripeClient;
+    }
+
+    /**
      * Create a new Stripe customer object
      *
      * You can pass an optional card token (created using Stripe.js), an optional coupon and some additional

@@ -57,6 +57,21 @@ class InvoiceService implements EventManagerAwareInterface
     private $stripeClient;
 
     /**
+     * @param ObjectManager    $objectManager
+     * @param ObjectRepository $invoiceRepository
+     * @param StripeClient     $stripeClient
+     */
+    public function __construct(
+        ObjectManager $objectManager,
+        ObjectRepository $invoiceRepository,
+        StripeClient $stripeClient
+    ) {
+        $this->objectManager     = $objectManager;
+        $this->invoiceRepository = $invoiceRepository;
+        $this->stripeClient      = $stripeClient;
+    }
+
+    /**
      * Force creating an invoice
      *
      * This is useful if you switch from one yearly to another yearly plan, and do not want to

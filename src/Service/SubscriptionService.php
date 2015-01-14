@@ -66,6 +66,27 @@ class SubscriptionService
     private $stripeClient;
 
     /**
+     * @param ObjectManager               $objectManager
+     * @param ObjectRepository            $subscriptionRepository
+     * @param BillableRepositoryInterface $billableRepository
+     * @param VatService                  $vatService
+     * @param StripeClient                $stripeClient
+     */
+    public function __construct(
+        ObjectManager $objectManager,
+        ObjectRepository $subscriptionRepository,
+        BillableRepositoryInterface $billableRepository,
+        VatService $vatService,
+        StripeClient $stripeClient
+    ) {
+        $this->objectManager          = $objectManager;
+        $this->subscriptionRepository = $subscriptionRepository;
+        $this->billableRepository     = $billableRepository;
+        $this->vatService             = $vatService;
+        $this->stripeClient           = $stripeClient;
+    }
+
+    /**
      * Create a new subscription for the given customer on a given plan for a billable resource (with optional quantity)
      *
      * @param  CustomerInterface $customer

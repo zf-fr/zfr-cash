@@ -39,6 +39,14 @@ class VatService
     private $moduleOptions;
 
     /**
+     * @param ModuleOptions $moduleOptions
+     */
+    public function __construct(ModuleOptions $moduleOptions)
+    {
+        $this->moduleOptions = $moduleOptions;
+    }
+
+    /**
      * Get the VAT rate for the given customer, based on its VAT info and your VAT info
      *
      * @param  VatCustomerInterface $customer

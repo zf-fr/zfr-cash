@@ -36,12 +36,6 @@ class ModuleOptionsFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('Config')['zfr_cash'];
 
-        if (!isset($config['customer_class']) || null === $config['customer_class']) {
-            throw new RuntimeException(
-                'Config key "customer_class" for ZfrCash is mandatory, but none has been provided'
-            );
-        }
-
         return new ModuleOptions($config);
     }
 }

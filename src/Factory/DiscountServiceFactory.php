@@ -20,18 +20,38 @@ namespace ZfrCash\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfrCash\Entity\CustomerInterface;
+use ZfrCash\Entity\Subscription;
+use ZfrCash\Options\ModuleOptions;
+use ZfrCash\Service\DiscountService;
+use ZfrStripe\Client\StripeClient;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class PlanServiceFactory implements FactoryInterface
+class DiscountServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        // TODO: Implement createService() method.
+        /** @var ModuleOptions $moduleOptions */
+        $moduleOptions = $serviceLocator->get(ModuleOptions::class);
+
+        /** @var \Doctrine\Common\Persistence\ObjectManager $objectManager */
+        $objectManager = $serviceLocator->get($moduleOptions->getObjectManager());
+
+        /** @var \Doctrine\Common\Persistence\ObjectRepository $subscriptionRepository */
+        $subscriptionRepository = $objectManager->getRepository(Subscription::class);
+
+        /** @var \ZfrCash\Repository\CustomerRepositoryInterface $customerRepository */
+        $customerRepository = $objectManager->getRepository(CustomerInterface::class);
+
+        /** @var StripeClient $stripeClient */
+        $stripeClient = $serviceLocator->get(StripeClient::class);
+
+        return new DiscountService($objectManager, $subscriptionRepository, $customerRepository, $stripeClient);
     }
 }

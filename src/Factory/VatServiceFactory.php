@@ -18,20 +18,20 @@
 
 namespace ZfrCash\Factory;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfrCash\Entity\Invoice;
+use ZfrCash\Entity\CustomerInterface;
+use ZfrCash\Entity\Subscription;
 use ZfrCash\Options\ModuleOptions;
-use ZfrCash\Repository\CustomerRepositoryInterface;
-use ZfrCash\Service\InvoiceService;
+use ZfrCash\Service\DiscountService;
+use ZfrCash\Service\VatService;
+use ZfrStripe\Client\StripeClient;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class InvoiceServiceFactory implements FactoryInterface
+class VatServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
@@ -41,15 +41,6 @@ class InvoiceServiceFactory implements FactoryInterface
         /** @var ModuleOptions $moduleOptions */
         $moduleOptions = $serviceLocator->get(ModuleOptions::class);
 
-        /** @var ObjectManager $objectManager */
-        $objectManager = $serviceLocator->get($moduleOptions->getObjectManager());
-
-        /** @var ObjectRepository $invoiceRepository */
-        $invoiceRepository = $objectManager->getRepository(Invoice::class);
-
-        /** @var CustomerRepositoryInterface $stripeCustomerRepository */
-        $stripeCustomerRepository = $objectManager->getRepository($moduleOptions->getCustomerClass());
-
-        return new InvoiceService($objectManager, $invoiceRepository, $stripeCustomerRepository);
+        return new VatService($moduleOptions);
     }
 }

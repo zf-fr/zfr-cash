@@ -62,6 +62,24 @@ class DiscountService
     private $stripeClient;
 
     /**
+     * @param ObjectManager               $objectManager
+     * @param ObjectRepository            $subscriptionRepository
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param StripeClient                $stripeClient
+     */
+    public function __construct(
+        ObjectManager $objectManager,
+        ObjectRepository $subscriptionRepository,
+        CustomerRepositoryInterface $customerRepository,
+        StripeClient $stripeClient
+    ) {
+        $this->objectManager          = $objectManager;
+        $this->subscriptionRepository = $subscriptionRepository;
+        $this->customerRepository     = $customerRepository;
+        $this->stripeClient           = $stripeClient;
+    }
+
+    /**
      * Create a new discount for a customer
      *
      * @param  CustomerInterface $customer

@@ -52,6 +52,16 @@ class PlanService
     private $planRepository;
 
     /**
+     * @param ObjectManager    $objectManager
+     * @param ObjectRepository $planRepository
+     */
+    public function __construct(ObjectManager $objectManager, ObjectRepository $planRepository)
+    {
+        $this->objectManager  = $objectManager;
+        $this->planRepository = $planRepository;
+    }
+
+    /**
      * Update an existing plan
      *
      * Note that you MUST NOT update Stripe properties like id, amount or name, as those won't be reflected
