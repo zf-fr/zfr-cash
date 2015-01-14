@@ -3,6 +3,27 @@
 ZfrCash is a high level Zend Framework 2 module that simplify how you handle payments. It internally uses
 Stripe as the payment gateway, using [ZfrStripe](https://github.com/zf-fr/zfr-stripe).
 
+Here are a few features of what ZfrCash allows:
+
+* Provides clean interfaces to represent a Stripe customer and a billable object (object that could receive
+a subscription).
+* Clean services to create customers, cards, discounts, invoices, plans and subscriptions.
+* Provides entities for some of Stripe resources, and keep them in sync with Stripe through webhooks.
+* Easily extensible: you can attach listener to Stripe webhook event, and perform additional actions based on
+webhooks.
+* Auto VAT support: if you have a european business, ZfrCash takes care of all the VAT handling mess (for new
+2015 regulations).
+* Optional features: ZfrCash can optionally export to PDF all your closed invoices to Amazon S3 for durable storage.
+
+## Dependencies
+
+* ZF2: >= 2.2
+* Doctrine ORM: >= 2.5 (we are using some new features that only ship with Doctrine ORM 2.5)
+* ZfrStripe
+
+While we only use Doctrine Common interfaces, I suspect it won't work with Doctrine ODM as it needs things like
+entity resolvers.
+
 ## Installation
 
 To install ZfrCash, use composer:
@@ -16,51 +37,103 @@ Enable ZfrCash in your `application.config.php`, then copy the file
 `config/autoload` directory of your application (don't forget to remove the
 `.dist` extension from the file name!).
 
-## Features
+## Key concepts
 
-* Clean interfaces to represent a billable object and a Stripe customer
-* Services to create subscriptions, plans and customers
-* Comes with sane defaults to answer to common Stripe events (like `customer.subscription.updated`)
-* Can optionally add a tax for each subscription based on Stripe metadata (for EU companies that have to handle VAT)
-* Maintain bi-directional data consistency
+Before diving into ZfrCash, you need to be familiar with some concepts that are used throughout this module:
+
+* Customer: a Customer (any object that implements `ZfrCash\Entity\CustomerInterface`) is a customer in sense of Stripe.
+A customer is associated to a Stripe customer identifier, a credit card (optional) and an optional discount.
+
+* Billable object: once you have a customer, you can create one or multiple recurring subscriptions. ZfrCash introduces
+the concept of a billable object (any object that implements the `ZfrCash\Entity\BillableInterface` interface). A
+billable object is simply an object that holds a subscription (which, in turns, holds a payer - a customer -).
+
+ZfrCash is flexible enough to allow a lot of different use cases. Here are multiple examples
+
+### One subscription per user
+
+If your business is based on one Stripe subscription per user (the user itself *subscribes* to a plan), then you could
+make your user implements the two ZfrCash interfaces:
+
+```php
+use ZfrCash\Entity\BillableInterface;
+use ZfrCash\Entity\BillableTrait;
+use ZfrCash\Entity\CustomerInterface;
+use ZfrCash\Entity\CustomerTrait;
+
+class User implements CustomerInterface, BillableInterface
+{
+    use CustomerTrait;
+    use BillableTrait;
+}
+```
+
+The two traits comes with sane default mapping.
+
+### One subscription per user with a different model for billing
+
+The customer interface and billable interface adds several fields to your user model. If you want to keep your
+models clearly separated, you could introduce a new model that will holds all the billings information, and your
+user model only composes it:
+
+UserBillingInfo class:
+
+```php
+use ZfrCash\Entity\BillableInterface;
+use ZfrCash\Entity\BillableTrait;
+use ZfrCash\Entity\CustomerInterface;
+use ZfrCash\Entity\CustomerTrait;
+
+class UserBillingInfo implements CustomerInterface, BillableInterface
+{
+    use CustomerTrait;
+    use BillableTrait;
+}
+```
+
+User class:
+
+```php
+class User
+{
+    /**
+     * @ORM\OneToOne(targetEntity="UserBillingInfo")
+     */
+    protected $userBillingInfo;
+}
+```
 
 ## Usage
 
 ### Configuration
 
-You first need to configure ZfrCash, by copying the `zfr_cash.local.php.dist` file to your `application/autoload`
-folder. There are some options that you can interact with, but the most important ones are:
+While ZfrCash tries to do as much as possible automatically, it requires some configuration on your end.
 
-* `object_manager`: ZfrCash is built around Doctrine interfaces. If you are using Doctrine ORM, there are great
-chances that you should specify `doctrine.entitymanager.orm_default`.
-* `customer_class`: this is the FQCN of your class that implements the `StripeCustomerInterface` interface.
-* `validate_webhooks`: for security reasons, Stripe recommends to validate incoming Stripe webhooks by fetching the
-original event, at the expense of one additional API call. We recommend you to stay with the default value, but you
-may consider disabling the validation if you are doing some IP filtering to only allow Stripe IPs.
-* `register_listeners`: this option automatically registers listeners for some specific Stripe events. For instance,
-whenever a `customer.subscription.updated` event is received, ZfrCash will automatically update various properties like
-`currentPeriodStart` and `currentPeriodEnd`. Of course, you must make sure to have properly configured your
-Stripe account to [send webhooks](https://stripe.com/docs/webhooks).
-* VAT: there are a few options that are related to VAT. An entire section is dedicated to those properties later
-in the documentation.
+#### Module config
+
+The first thing you need is to copy the `zfr_cash.local.php.dist` file to your `application/autoload`
+folder. There is one mandatory option:
+
+* `object_manager`: if you are using Doctrine ORM, there are great chances that you should specify
+`doctrine.entitymanager.orm_default`.
 
 #### Specify the Doctrine resolver
 
+In your application, add the following config:
 
+```php
+return [
+    'doctrine' => [
+        'entity_resolver' => [
+            'orm_default' => [
+                'resolvers' => [
+                    CustomerInterface::class => YourCustomerClass::class,
+                    BillableInterface::class => YourBillableClass::class
+                ]
+            ]
+        ]
+    ]
+]
+```
 
-### Webhook listener
-
-ZfrCash comes with a controller
-
-
-* customer.discount.created
-* customer.discount.updated
-* customer.discount.deleted
-* customer.subscription.updated
-* plan.created
-* plan.updated
-* plan.deleted
-* invoice.created
-* invoice.payment_succeeded
-* invoice.payment_failed
-* invoice.updated
+This actually maps the two ZfrCash interfaces to concrete implementations in your code.
