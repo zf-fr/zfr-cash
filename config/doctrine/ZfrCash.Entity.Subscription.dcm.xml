@@ -12,7 +12,7 @@
 
         <field name="stripeId" column="stripe_id" type="string" length="255" unique="true" />
         <many-to-one field="plan" target-entity="ZfrCash\Entity\Plan" />
-        <many-to-one field="payer" target-entity="ZfrCash\Entity\StripeCustomerInterface">
+        <many-to-one field="payer" target-entity="ZfrCash\Entity\CustomerInterface">
             <join-column on-delete="CASCADE" />
         </many-to-one>
         <one-to-one field="discount" target-entity="ZfrCash\Entity\Discount" mapped-by="subscription">

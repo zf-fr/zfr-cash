@@ -24,7 +24,7 @@
         <field name="taxPercent" column="tax_percent" type="decimal" precision="5" scale="2" />
         <field name="amountDue" column="amount_due" type="integer" />
         <field name="currency" type="string" length="3" />
-        <field name="paid" type="boolean" />
+        <field name="closed" type="boolean" />
         <field name="paid" type="boolean" />
         <field name="forgiven" type="boolean" />
         <field name="attemptCount" column="attempt_count" type="smallint" />

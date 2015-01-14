@@ -12,9 +12,9 @@
 
         <field name="stripeId" column="stripe_id" type="string" length="255" unique="true" />
 
-        <many-to-one field="customer" target-entity="ZfrCash\Entity\CustomerInterface" inversed-by="card">
+        <one-to-one field="customer" target-entity="ZfrCash\Entity\CustomerInterface" inversed-by="card">
             <join-column on-delete="CASCADE" />
-        </many-to-one>
+        </one-to-one>
 
         <field name="brand" type="string" length="20" />
         <field name="expMonth" column="exp_month" type="smallint" />

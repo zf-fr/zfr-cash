@@ -47,7 +47,7 @@ trait CustomerTrait
     /**
      * @var Discount|null
      *
-     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Discount", orphanRemoval=true, mappedBy="customer")
+     * @ORM\OneToMany(targetEntity="ZfrCash\Entity\Discount", orphanRemoval=true, mappedBy="customer")
      */
     protected $discount;
 

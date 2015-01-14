@@ -10,9 +10,10 @@
             <generator strategy="AUTO" />
         </id>
 
-        <many-to-one field="invoice" target-entity="ZfrCash\Entity\Invoice" inversed-by="invoices">
+        <many-to-one field="invoice" target-entity="ZfrCash\Entity\Invoice" inversed-by="lineItems">
             <join-column on-delete="CASCADE" />
         </many-to-one>
+        
         <field name="amount" type="integer" />
         <field name="currency" type="string" length="3" />
         <field name="description" type="string" length="1000" nullable="true" />
