@@ -67,8 +67,8 @@ trait InvoicePopulatorTrait
                 if ($lineItemData['type'] === 'subscription') {
                     $lineItem->setDescription(sprintf(
                         'Usage on %s x %s',
-                        $lineItem['quantity'],
-                        $lineItem['plan']['name']
+                        $lineItemData['quantity'],
+                        $lineItemData['plan']['name']
                     ));
                 }
 

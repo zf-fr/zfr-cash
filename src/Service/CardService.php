@@ -63,7 +63,10 @@ class CardService
      */
     public function attachToCustomer(CustomerInterface $customer, $cardToken)
     {
-        $stripeCard = $this->stripeClient->createCard(['card' => (string) $cardToken]);
+        $stripeCard = $this->stripeClient->createCard([
+            'customer' => $customer->getStripeId(),
+            'card'     => (string) $cardToken
+        ]);
 
         // If the customer had a previous card, we must remove it before saving the new one
         if (null !== $customer->getCard()) {

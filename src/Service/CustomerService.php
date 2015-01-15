@@ -106,14 +106,14 @@ class CustomerService
 
         if (!empty($stripeCustomer['cards']['data'])) {
             $card = new Card();
-            $card->setCustomer($customer);
+            $customer->setCard($card);
 
             $this->populateCardFromStripeResource($card, current($stripeCustomer['cards']['data']));
         }
 
         if (null !== $stripeCustomer['discount']) {
             $discount = new Discount();
-            $discount->setCustomer($customer);
+            $customer->setDiscount($discount);
 
             $this->populateDiscountFromStripeResource($discount, $stripeCustomer['discount']);
         }
