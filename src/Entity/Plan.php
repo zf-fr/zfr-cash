@@ -93,7 +93,7 @@ class Plan
     /**
      * @var array|\Doctrine\Common\Collections\Collection
      */
-    protected $limits = [];
+    protected $limits;
 
     /**
      * @var bool

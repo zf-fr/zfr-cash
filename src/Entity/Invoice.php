@@ -115,7 +115,7 @@ class Invoice
     /**
      * @var LineItem[]|\Doctrine\Common\Collections\Collection
      */
-    protected $lineItems = [];
+    protected $lineItems;
 
     /**
      * @var string|null

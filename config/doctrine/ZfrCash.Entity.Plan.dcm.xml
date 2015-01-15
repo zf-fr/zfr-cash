@@ -15,9 +15,10 @@
         </id>
 
         <field name="stripeId" column="stripe_id" type="string" length="255" />
+        <field name="name" type="string" length="255" />
         <field name="amount" type="integer" />
         <field name="currency" type="string" length="3" />
-        <field name="interval" type="string" length="5" />
+        <field name="interval" column="`interval`" type="string" length="5" />
         <field name="intervalCount" column="interval_count" type="smallint" />
         <field name="trialPeriodDays" column="trial_period_days" type="smallint" nullable="true" />
         <field name="features" type="json_array" />
