@@ -76,6 +76,18 @@ class PlanService
     }
 
     /**
+     * Deactivate a plan
+     *
+     * @param  Plan $plan
+     * @return Plan
+     */
+    public function deactivate(Plan $plan)
+    {
+        $plan->setActive(false);
+        $this->objectManager->flush();
+    }
+
+    /**
      * Sync a plan from a Stripe event
      *
      * @param  array $stripeEvent
@@ -102,6 +114,12 @@ class PlanService
         }
 
         $this->populatePlanFromStripeResource($plan, $stripePlan);
+
+        // If this is a deletion event, we deactivate the plan (we should never completely remove a plan from
+        // our end, because subscriptions may still be linked to it)
+        if ($stripeEvent['type'] === 'plan.deleted') {
+            $plan->setActive(false);
+        }
 
         $this->objectManager->flush($plan);
     }
