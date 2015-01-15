@@ -35,11 +35,6 @@ class Card
     protected $stripeId;
 
     /**
-     * @var CustomerInterface
-     */
-    protected $customer;
-
-    /**
      * @var string
      */
     protected $brand;
@@ -86,22 +81,6 @@ class Card
     public function getStripeId()
     {
         return $this->stripeId;
-    }
-
-    /**
-     * @param CustomerInterface $customer
-     */
-    public function setCustomer(CustomerInterface $customer)
-    {
-        $this->customer = $customer;
-    }
-
-    /**
-     * @return CustomerInterface
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
     }
 
     /**

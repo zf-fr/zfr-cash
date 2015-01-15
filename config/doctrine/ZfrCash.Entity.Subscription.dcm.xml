@@ -15,8 +15,7 @@
         <many-to-one field="payer" target-entity="ZfrCash\Entity\CustomerInterface">
             <join-column on-delete="CASCADE" />
         </many-to-one>
-        <one-to-one field="discount" target-entity="ZfrCash\Entity\Discount" mapped-by="subscription">
-        </one-to-one>
+        <one-to-one field="discount" target-entity="ZfrCash\Entity\Discount" />
         <field name="quantity" type="integer" />
         <field name="taxPercent" column="tax_percent" type="decimal" precision="5" scale="2" />
         <field name="currentPeriodStart" column="current_period_start" type="datetime" />

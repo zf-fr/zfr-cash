@@ -71,7 +71,7 @@ class CardService
         }
 
         $card = new Card();
-        $card->setCustomer($customer);
+        $customer->setCard($card);
 
         $this->populateCardFromStripeResource($card, $stripeCard);
 

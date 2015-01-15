@@ -40,14 +40,14 @@ trait CustomerTrait
     /**
      * @var Card|null
      *
-     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Card", orphanRemoval=true, mappedBy="customer")
+     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Card")
      */
     protected $card;
 
     /**
      * @var Discount|null
      *
-     * @ORM\OneToMany(targetEntity="ZfrCash\Entity\Discount", orphanRemoval=true, mappedBy="customer")
+     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Discount")
      */
     protected $discount;
 
@@ -72,10 +72,6 @@ trait CustomerTrait
      */
     public function setCard(Card $card = null)
     {
-        if (null !== $card) {
-            $card->setCustomer($this);
-        }
-
         $this->card = $card;
     }
 
@@ -92,10 +88,6 @@ trait CustomerTrait
      */
     public function setDiscount(Discount $discount = null)
     {
-        if (null !== $discount) {
-            $discount->setCustomer($this);
-        }
-
         $this->discount = $discount;
     }
 

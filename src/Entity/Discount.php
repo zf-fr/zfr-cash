@@ -23,7 +23,7 @@ use DateTime;
 /**
  * Represents a discount
  *
- * A discount is always bound to a Stripe customer, and may optionally be bound to a specific subscription
+ * Either subscription or customer may have a coupon
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
@@ -34,11 +34,6 @@ class Discount
      * @var int
      */
     protected $id;
-
-    /**
-     * @var CustomerInterface
-     */
-    protected $customer;
 
     /**
      * @var Coupon
@@ -56,32 +51,11 @@ class Discount
     protected $endAt;
 
     /**
-     * @var Subscription|null
-     */
-    protected $subscription;
-
-    /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param CustomerInterface $customer
-     */
-    public function setCustomer(CustomerInterface $customer)
-    {
-        $this->customer = $customer;
-    }
-
-    /**
-     * @return CustomerInterface
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
     }
 
     /**
@@ -134,21 +108,5 @@ class Discount
     public function getEndAt()
     {
         return $this->endAt ? clone $this->endAt : null;
-    }
-
-    /**
-     * @param Subscription|null $subscription
-     */
-    public function setSubscription(Subscription $subscription = null)
-    {
-        $this->subscription = $subscription;
-    }
-
-    /**
-     * @return Subscription|null
-     */
-    public function getSubscription()
-    {
-        return $this->subscription;
     }
 }

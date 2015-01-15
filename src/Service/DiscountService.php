@@ -94,7 +94,7 @@ class DiscountService
         ]);
 
         $discount = new Discount();
-        $discount->setCustomer($customer);
+        $customer->setDiscount($discount);
 
         $this->populateDiscountFromStripeResource(new Discount(), $stripeCustomer['discount']);
 
@@ -120,8 +120,7 @@ class DiscountService
         ]);
 
         $discount = new Discount();
-        $discount->setCustomer($subscription->getPayer());
-        $discount->setSubscription($subscription);
+        $subscription->setDiscount($discount);
 
         $this->populateDiscountFromStripeResource($discount, $stripeSubscription['discount']);
 
@@ -164,7 +163,7 @@ class DiscountService
         }
 
         $this->stripeClient->deleteCustomerDiscount([
-            'customer'      => $payer->getStripeId(),
+            'customer'     => $payer->getStripeId(),
             'subscription' => $subscription->getStripeId()
         ]);
 
@@ -215,8 +214,11 @@ class DiscountService
         $discount = $discount ?: new Discount();
         $this->populateDiscountFromStripeResource($discount, $stripeDiscount);
 
-        $discount->setCustomer($customer);
-        $discount->setSubscription($subscription);
+        if (null !== $stripeDiscount['subscription']) {
+            $subscription->setDiscount($discount);
+        } else {
+            $customer->setDiscount($discount);
+        }
 
         $this->objectManager->persist($discount);
         $this->objectManager->flush($discount);
