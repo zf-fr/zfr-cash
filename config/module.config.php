@@ -17,6 +17,7 @@
  */
 
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use ZfrCash\Controller\WebhookListenerController;
 use ZfrCash\Factory\CardServiceFactory;
 use ZfrCash\Factory\CustomerServiceFactory;
 use ZfrCash\Factory\DiscountServiceFactory;
@@ -25,6 +26,7 @@ use ZfrCash\Factory\ModuleOptionsFactory;
 use ZfrCash\Factory\PlanServiceFactory;
 use ZfrCash\Factory\SubscriptionServiceFactory;
 use ZfrCash\Factory\VatServiceFactory;
+use ZfrCash\Factory\WebhookListenerControllerFactory;
 use ZfrCash\Factory\WebhookListenerFactory;
 use ZfrCash\Listener\WebhookListener;
 use ZfrCash\Options\ModuleOptions;
@@ -55,6 +57,12 @@ return [
     'validators' => [
         'invokables' => [
             'vies' => ViesValidator::class
+        ]
+    ],
+
+    'controllers' => [
+        'factories' => [
+            WebhookListenerController::class => WebhookListenerControllerFactory::class
         ]
     ],
 
