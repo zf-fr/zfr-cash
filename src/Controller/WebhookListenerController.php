@@ -65,7 +65,7 @@ class WebhookListenerController extends AbstractActionController
     {
         $event = json_decode($this->request->getContent(), true);
 
-        if ($event['livemode'] && !$this->isLiveStripeKey()) {
+        if (null === $event || ($event['livemode'] && !$this->isLiveStripeKey())) {
             return new HttpResponse(); // Return silently
         }
 
@@ -79,7 +79,7 @@ class WebhookListenerController extends AbstractActionController
     {
         $event = json_decode($this->request->getContent(), true);
 
-        if (!$event['livemode'] && $this->isLiveStripeKey()) {
+        if (null === $event || (!$event['livemode'] && $this->isLiveStripeKey())) {
             return new HttpResponse(); // Return silently
         }
 
