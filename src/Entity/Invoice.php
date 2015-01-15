@@ -435,11 +435,11 @@ class Invoice
     }
 
     /**
-     * @param string $vatNumber
+     * @param string|null $vatNumber
      */
-    public function setVatNumber($vatNumber)
+    public function setVatNumber($vatNumber = null)
     {
-        $this->vatNumber = (string) $vatNumber;
+        $this->vatNumber = $vatNumber;
     }
 
     /**
@@ -451,11 +451,11 @@ class Invoice
     }
 
     /**
-     * @param string $vatCountry
+     * @param string|null $vatCountry
      */
-    public function setVatCountry($vatCountry)
+    public function setVatCountry($vatCountry = null)
     {
-        $this->vatCountry = (string) $vatCountry;
+        $this->vatCountry = $vatCountry;
     }
 
     /**

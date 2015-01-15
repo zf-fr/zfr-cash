@@ -18,17 +18,16 @@
 
 namespace ZfrCash\Service;
 
-use DateTime;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\Entity\Invoice;
-use ZfrCash\Entity\LineItem;
 use ZfrCash\Entity\Subscription;
 use ZfrCash\Entity\VatCustomerInterface;
 use ZfrCash\Event\InvoiceEvent;
+use ZfrCash\Repository\CustomerRepositoryInterface;
 use ZfrCash\StripePopulator\InvoicePopulatorTrait;
 use ZfrStripe\Client\StripeClient;
 
@@ -52,23 +51,39 @@ class InvoiceService implements EventManagerAwareInterface
     private $invoiceRepository;
 
     /**
+     * @var CustomerRepositoryInterface
+     */
+    private $customerRepository;
+
+    /**
+     * @var ObjectRepository
+     */
+    private $subscriptionRepository;
+
+    /**
      * @var StripeClient
      */
     private $stripeClient;
 
     /**
-     * @param ObjectManager    $objectManager
-     * @param ObjectRepository $invoiceRepository
-     * @param StripeClient     $stripeClient
+     * @param ObjectManager               $objectManager
+     * @param ObjectRepository            $invoiceRepository
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param ObjectRepository            $subscriptionRepository
+     * @param StripeClient                $stripeClient
      */
     public function __construct(
         ObjectManager $objectManager,
         ObjectRepository $invoiceRepository,
+        CustomerRepositoryInterface $customerRepository,
+        ObjectRepository $subscriptionRepository,
         StripeClient $stripeClient
     ) {
-        $this->objectManager     = $objectManager;
-        $this->invoiceRepository = $invoiceRepository;
-        $this->stripeClient      = $stripeClient;
+        $this->objectManager          = $objectManager;
+        $this->invoiceRepository      = $invoiceRepository;
+        $this->customerRepository     = $customerRepository;
+        $this->subscriptionRepository = $subscriptionRepository;
+        $this->stripeClient           = $stripeClient;
     }
 
     /**
@@ -119,7 +134,23 @@ class InvoiceService implements EventManagerAwareInterface
         $invoice       = $this->invoiceRepository->findOneBy(['stripeId' => $stripeInvoice['id']]);
 
         if (null === $invoice) {
+            $customer     = $this->customerRepository->findOneByStripeId($stripeInvoice['customer']);
+            $subscription = null;
+
+            if (null !== $stripeInvoice['subscription']) {
+                $subscription = $this->subscriptionRepository->findOneBy(['stripeId' => $stripeInvoice['subscription']]);
+            }
+
             $invoice = new Invoice();
+            $invoice->setPayer($customer);
+            $invoice->setSubscription($subscription);
+
+            // If customer handles VAT, we add the VAT info to the invoice
+            if ($customer instanceof VatCustomerInterface) {
+                $invoice->setVatCountry($customer->getVatCountry());
+                $invoice->setVatNumber($customer->getVatNumber());
+            }
+
             $this->objectManager->persist($invoice);
         }
 
@@ -128,10 +159,10 @@ class InvoiceService implements EventManagerAwareInterface
         $this->objectManager->flush($invoice);
 
         // If the invoice is closed, we trigger an additional event that could be used to generate, for
-        // instance, a PDF and sending an email. We also want to make sure the event is not "invoice.update", because
-        // an already closed invoice can be updated with useless things like metadata, but that should not retrigger
+        // instance, a PDF and sending an email. We also want to make sure the event is not "invoice.update" nor "invoice.create"
+        // because an already closed invoice can be updated with useless things like metadata, but that should not retrigger
         // such an event
-        if ($invoice->isClosed() && $stripeEvent['type'] !== 'invoice.updated') {
+        if ($invoice->isClosed() && !in_array($stripeEvent['type'], ['invoice.created', 'invoice.updated'], true)) {
             $invoiceEvent = new InvoiceEvent($invoice);
             $this->getEventManager()->trigger(InvoiceEvent::INVOICE_CLOSED, $invoiceEvent);
         }

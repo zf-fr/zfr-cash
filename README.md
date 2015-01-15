@@ -103,6 +103,12 @@ class User
 }
 ```
 
+### Multiple subscriptions
+
+Stripe supports multiple subscriptions, and ZfrCash makes it easy to support this use case. For instance, you
+may want to price per project, each new project resulting in a new, separate subscription (but paid by the same
+person). In this case, the billable object will be the project, will the user will stay the Customer.
+
 ## Usage
 
 ### Configuration
@@ -137,3 +143,10 @@ return [
 ```
 
 This actually maps the two ZfrCash interfaces to concrete implementations in your code.
+
+#### Implementing repositories interface
+
+For ZfrCash to work properly, you must create two custom Doctrine repositories:
+
+* The repository for the class implementing `CustomerInterface` must implements `ZfrCash\Repository\CustomerRepositoryInterface`.
+* The repository for the class implementing `BillableInterface` must implements `ZfrCash\Repository\BillableRepositoryInterface`
