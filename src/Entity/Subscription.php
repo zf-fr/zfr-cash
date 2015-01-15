@@ -159,7 +159,6 @@ class Subscription
      */
     public function setDiscount(Discount $discount = null)
     {
-        $discount->setSubscription($this);
         $this->discount = $discount;
     }
 

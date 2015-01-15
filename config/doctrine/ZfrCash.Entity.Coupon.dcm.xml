@@ -8,7 +8,7 @@
     <embeddable name="ZfrCash\Entity\Coupon">
         <field name="code" type="string" length="255" />
         <field name="amountOff" column="amount_off" type="integer" nullable="true" />
-        <field name="currency" type="string" length="3" />
+        <field name="currency" type="string" length="3" nullable="true" />
         <field name="percentOff" column="percent_off" type="smallint" nullable="true" />
     </embeddable>
 </doctrine-mapping>

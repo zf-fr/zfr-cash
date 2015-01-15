@@ -41,6 +41,7 @@ trait CustomerTrait
      * @var Card|null
      *
      * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Card")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $card;
 
@@ -48,6 +49,7 @@ trait CustomerTrait
      * @var Discount|null
      *
      * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Discount")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $discount;
 

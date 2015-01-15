@@ -40,11 +40,14 @@ trait DiscountPopulatorTrait
 
         $coupon->setCode($stripeCoupon['id']);
         $coupon->setAmountOff($stripeCoupon['amount_off']);
-        $coupon->setCurrency($stripeCoupon['coupon']);
+        $coupon->setCurrency($stripeCoupon['currency']);
         $coupon->setPercentOff($stripeCoupon['percent_off']);
 
         $discount->setCoupon($coupon);
-        $discount->setStartedAt(new DateTime($stripeDiscount['start']));
-        $discount->setEndAt(new DateTime($stripeDiscount['end']));
+        $discount->setStartedAt((new DateTime())->setTimestamp($stripeDiscount['start']));
+
+        if (null !== $stripeDiscount['end']) {
+            $discount->setEndAt((new DateTime())->setTimestamp($stripeDiscount['end']));
+        }
     }
 }

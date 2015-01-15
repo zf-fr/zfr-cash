@@ -205,6 +205,16 @@ class DiscountService
 
         // If event is about deletion, then we just remove it
         if ($stripeEvent['type'] === 'customer.discount.deleted') {
+            if (null === $discount) {
+                return;
+            }
+
+            if (null === $stripeDiscount['subscription']) {
+                $customer->setDiscount(null);
+            } else {
+                $subscription->setDiscount(null);
+            }
+
             $this->objectManager->remove($discount);
             $this->objectManager->flush();
 
@@ -221,6 +231,6 @@ class DiscountService
         }
 
         $this->objectManager->persist($discount);
-        $this->objectManager->flush($discount);
+        $this->objectManager->flush();
     }
 }

@@ -39,7 +39,7 @@ trait SubscriptionPopulatorTrait
         $subscription->setStripeId($stripeSubscription['id']);
         $subscription->setQuantity($stripeSubscription['quantity']);
         $subscription->setTaxPercent($stripeSubscription['tax_percent']);
-        $subscription->setCurrentPeriodEnd((new DateTime())->setTimestamp($stripeSubscription['current_period_start']));
+        $subscription->setCurrentPeriodStart((new DateTime())->setTimestamp($stripeSubscription['current_period_start']));
         $subscription->setCurrentPeriodEnd((new DateTime())->setTimestamp($stripeSubscription['current_period_end']));
         $subscription->setStatus($stripeSubscription['status']);
 
