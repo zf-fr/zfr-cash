@@ -23,6 +23,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use ZfrCash\Entity\Card;
 use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\Entity\Discount;
+use ZfrCash\Entity\VatCustomerInterface;
 use ZfrCash\Repository\CustomerRepositoryInterface;
 use ZfrCash\StripePopulator\CardPopulatorTrait;
 use ZfrCash\StripePopulator\DiscountPopulatorTrait;

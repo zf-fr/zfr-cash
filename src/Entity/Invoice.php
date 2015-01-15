@@ -113,7 +113,7 @@ class Invoice
     protected $attemptCount = 0;
 
     /**
-     * @var LineItem[]
+     * @var LineItem[]|\Doctrine\Common\Collections\Collection
      */
     protected $lineItems = [];
 
@@ -415,7 +415,7 @@ class Invoice
      */
     public function getLineItems()
     {
-        return $this->lineItems;
+        return $this->lineItems->toArray();
     }
 
     /**

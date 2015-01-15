@@ -79,7 +79,7 @@ return [
         // Define if webhooks coming from Stripe should be validated (recommended)
         'validate_webhooks' => true,
 
-        // Register built-in listeners
+        // Register built-in listeners (recommended)
         'register_listeners' => true
     ]
 ];

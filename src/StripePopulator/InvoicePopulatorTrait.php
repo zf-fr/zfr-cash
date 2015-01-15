@@ -50,18 +50,21 @@ trait InvoicePopulatorTrait
         $invoice->setDescription($stripeInvoice['description']);
 
         // Create the latest 10 line items for details. Note that an invoice may have more line items,
-        // but if it contains thousands of items it may quickly break everything
-        $lineItems = [];
+        // but if it contains thousands of items it may quickly break your database. Also note that we save
+        // the line items ONLY when the invoice is considered as closed. The reason is that until the invoice
+        // is closed, new line items may be introduced, and we do not want to save them until then
 
-        // @TODO: what will happen here if the invoice is updated? Will we have duplicated line items?
+        if ($stripeInvoice['closed'] && empty($invoice->getLineItems())) {
+            $lineItems = [];
 
-        foreach ($stripeInvoice['lines']['data'] as $lineItemData) {
-            $lineItem = new LineItem();
-            $lineItem->setAmount($lineItemData['amount']);
-            $lineItem->setDescription($lineItemData['description']);
-            $lineItem->setCurrency($lineItemData['currency']);
+            foreach ($stripeInvoice['lines']['data'] as $lineItemData) {
+                $lineItem = new LineItem();
+                $lineItem->setAmount($lineItemData['amount']);
+                $lineItem->setDescription($lineItemData['description']);
+                $lineItem->setCurrency($lineItemData['currency']);
+            }
+
+            $invoice->setLineItems($lineItems);
         }
-
-        $invoice->setLineItems($lineItems);
     }
 }

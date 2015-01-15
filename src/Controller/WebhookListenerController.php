@@ -66,7 +66,7 @@ class WebhookListenerController extends AbstractActionController
         $event = json_decode($this->request->getContent(), true);
 
         if ($event['livemode'] && !$this->isLiveStripeKey()) {
-            throw new RuntimeException('Received a live event, but using a test Stripe secret key');
+            return new HttpResponse(); // Return silently
         }
 
         return $this->handleEvent($event);
@@ -80,7 +80,7 @@ class WebhookListenerController extends AbstractActionController
         $event = json_decode($this->request->getContent(), true);
 
         if (!$event['livemode'] && $this->isLiveStripeKey()) {
-            throw new RuntimeException('Received a test event, but using a live Stripe secret key');
+            return new HttpResponse(); // Return silently
         }
 
         return $this->handleEvent($event);
@@ -99,7 +99,7 @@ class WebhookListenerController extends AbstractActionController
                 $event = $this->stripeClient->getEvent(['id' => $event['id']]);
             } catch (StripeNotFoundException $exception) {
                 // If the event is not found, then we simply return silently. This typically only happen
-                // with someone is trying to hack your system
+                // with someone is trying to hack your system with scam events
                 return $response;
             }
         }
@@ -116,7 +116,7 @@ class WebhookListenerController extends AbstractActionController
         }
 
         $response->setReasonPhrase(sprintf(
-            'Stripe event "%s" of type "%s" was properly received and processed: %s',
+            'Stripe event "%s" of type "%s" was received and processed. Logged message(s): %s',
             $event['id'],
             $event['type'],
             $message

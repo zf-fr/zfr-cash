@@ -21,8 +21,9 @@ namespace ZfrCash\Entity;
 /**
  * Interface for a Stripe customer
  *
- * If you implement this interface, automatic VAT handling will not be taken into account. If you want
- * ZfrCash to handle all the european VAT mess, implements the "VatCustomerInterface" instead
+ * Most often, your user class will implement this interface. However, you may also decide to create
+ * a new class that implements this interface, in order to keep all the "billing-related" information in
+ * another class
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT

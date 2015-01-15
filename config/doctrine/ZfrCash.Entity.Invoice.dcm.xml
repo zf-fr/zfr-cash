@@ -28,7 +28,7 @@
         <field name="paid" type="boolean" />
         <field name="forgiven" type="boolean" />
         <field name="attemptCount" column="attempt_count" type="smallint" />
-        <one-to-many field="lineItems" target-entity="ZfrCash\Entity\LineItem" orphanRemoval="true" fetch="EAGER" mapped-by="invoice">
+        <one-to-many field="lineItems" target-entity="ZfrCash\Entity\LineItem" fetch="EAGER" mapped-by="invoice">
             <join-column name="line_items" />
             <cascade>
                 <cascade-persist />

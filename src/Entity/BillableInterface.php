@@ -21,9 +21,10 @@ namespace ZfrCash\Entity;
 /**
  * Interface that represents something that is billable
  *
- * A billable object is somewhat related to a Stripe customer, in the sense that a Stripe customer is billed
- * for one or more resource. You may make your customer billable, or if you charge "per project", you may also
- * make each of your project a separate billable interface.
+ * A billable is an object that can receive a subscription. Depending on your use case, a billable resource
+ * can be your user itself (if you assume only one subscription per customer). In other cases (for instance if
+ * you charge "per project", each user potentially having multiple projects), then you can make your project
+ * implements this interface
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
