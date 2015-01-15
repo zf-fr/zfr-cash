@@ -29,12 +29,6 @@
         <field name="paid" type="boolean" />
         <field name="forgiven" type="boolean" />
         <field name="attemptCount" column="attempt_count" type="smallint" />
-        <one-to-many field="lineItems" target-entity="ZfrCash\Entity\LineItem" fetch="EAGER" mapped-by="invoice">
-            <join-column name="line_items" />
-            <cascade>
-                <cascade-persist />
-            </cascade>
-        </one-to-many>
         <field name="description" type="string" length="1000" nullable="true" />
         <field name="vatNumber" column="vat_number" type="string" length="60" nullable="true" />
         <field name="vatCountry" column="vat_country" type="string" length="2" nullable="true" />

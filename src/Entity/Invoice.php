@@ -19,7 +19,6 @@
 namespace ZfrCash\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Entity that represents an invoice
@@ -123,11 +122,6 @@ class Invoice
     protected $attemptCount = 0;
 
     /**
-     * @var LineItem[]|\Doctrine\Common\Collections\Collection
-     */
-    protected $lineItems;
-
-    /**
      * @var string|null
      */
     protected $description;
@@ -151,14 +145,6 @@ class Invoice
      * @var DateTime
      */
     protected $createdAt;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->lineItems = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -438,26 +424,6 @@ class Invoice
     public function getAttemptCount()
     {
         return $this->attemptCount;
-    }
-
-    /**
-     * @param LineItem[] $lineItems
-     */
-    public function setLineItems(array $lineItems)
-    {
-        foreach ($lineItems as $lineItem) {
-            $lineItem->setInvoice($this);
-        }
-
-        $this->lineItems = $lineItems;
-    }
-
-    /**
-     * @return LineItem[]
-     */
-    public function getLineItems()
-    {
-        return $this->lineItems->toArray();
     }
 
     /**

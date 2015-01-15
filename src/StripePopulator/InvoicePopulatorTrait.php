@@ -52,33 +52,5 @@ trait InvoicePopulatorTrait
         $invoice->setForgiven($stripeInvoice['forgiven']);
         $invoice->setAttemptCount($stripeInvoice['attempt_count']);
         $invoice->setDescription($stripeInvoice['description']);
-
-        // Create the latest 10 line items for details. Note that an invoice may have more line items,
-        // but if it contains thousands of items it may quickly break your database. Also note that we save
-        // the line items ONLY when the invoice is considered as closed. The reason is that until the invoice
-        // is closed, new line items may be introduced, and we do not want to save them until then
-
-        if ($stripeInvoice['closed'] && empty($invoice->getLineItems())) {
-            $lineItems = [];
-
-            foreach ($stripeInvoice['lines']['data'] as $lineItemData) {
-                $lineItem = new LineItem();
-                $lineItem->setAmount($lineItemData['amount']);
-                $lineItem->setDescription($lineItemData['description']);
-                $lineItem->setCurrency($lineItemData['currency']);
-
-                if ($lineItemData['type'] === 'subscription') {
-                    $lineItem->setDescription(sprintf(
-                        'Usage on %s x %s',
-                        $lineItemData['quantity'],
-                        $lineItemData['plan']['name']
-                    ));
-                }
-
-                $lineItems[] = $lineItem;
-            }
-
-            $invoice->setLineItems($lineItems);
-        }
     }
 }
