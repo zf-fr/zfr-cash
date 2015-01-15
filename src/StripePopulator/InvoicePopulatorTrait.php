@@ -43,8 +43,8 @@ trait InvoicePopulatorTrait
         $invoice->setSubtotal($stripeInvoice['subtotal']);
         $invoice->setTotal($stripeInvoice['total']);
         $invoice->setApplicationFee($stripeInvoice['application_fee']);
-        $invoice->setTax(isset($stripeInvoice['tax']) ? $stripeInvoice['tax'] : 0);
-        $invoice->setTaxPercent(isset($stripeInvoice['tax_percent']) ? $stripeInvoice['tax_percent'] : 0);
+        $invoice->setTax(isset($stripeInvoice['tax']) ? $stripeInvoice['tax'] : 0); // Tax is not always in Stripe payload
+        $invoice->setTaxPercent($stripeInvoice['tax_percent']);
         $invoice->setAmountDue($stripeInvoice['amount_due']);
         $invoice->setCurrency($stripeInvoice['currency']);
         $invoice->setClosed($stripeInvoice['closed']);
