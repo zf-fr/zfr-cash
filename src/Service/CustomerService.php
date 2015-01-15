@@ -88,7 +88,7 @@ class CustomerService
      * @param  array       $options
      * @return CustomerInterface
      */
-    public function create($cardToken = null, $coupon = null, array $options)
+    public function create($cardToken = null, $coupon = null, array $options = [])
     {
         $stripeCustomer = $this->stripeClient->createCustomer(array_filter([
             'card'        => $cardToken,

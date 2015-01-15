@@ -224,7 +224,7 @@ class SubscriptionService
      * @param  CustomerInterface $customer
      * @return Subscription[]
      */
-    public function getByCustomer(CustomerInterface $customer)
+    public function getAllByCustomer(CustomerInterface $customer)
     {
         return $this->subscriptionRepository->findBy(['payer' => $customer]);
     }
