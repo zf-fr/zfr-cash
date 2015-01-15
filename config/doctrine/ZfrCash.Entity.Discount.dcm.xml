@@ -10,16 +10,8 @@
             <generator strategy="AUTO" />
         </id>
 
-        <many-to-one field="customer" target-entity="ZfrCash\Entity\CustomerInterface" inversed-by="discount">
-            <join-column on-delete="CASCADE" />
-        </many-to-one>
-
         <embedded name="coupon" class="ZfrCash\Entity\Coupon" />
         <field name="startedAt" column="started_at" type="datetime" />
         <field name="endAt" column="end_at" type="datetime" nullable="true" />
-
-        <one-to-one field="subscription" target-entity="ZfrCash\Entity\Subscription" inversed-by="discount">
-            <join-column on-delete="CASCADE" />
-        </one-to-one>
     </entity>
 </doctrine-mapping>
