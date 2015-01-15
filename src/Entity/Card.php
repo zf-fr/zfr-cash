@@ -162,4 +162,23 @@ class Card
     {
         return $this->country;
     }
+
+    /**
+     * @return bool
+     */
+    public function isExpired()
+    {
+        $currentYear  = (int) date('Y');
+        $currentMonth = (int) date('n');
+
+        if ($currentYear < $this->expYear) {
+            return false;
+        }
+
+        if ($currentYear === $this->expYear) {
+            return $currentMonth <= $this->expMonth;
+        }
+
+        return true;
+    }
 }

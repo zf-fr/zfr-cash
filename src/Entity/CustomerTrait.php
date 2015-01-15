@@ -100,4 +100,17 @@ trait CustomerTrait
     {
         return $this->discount;
     }
+
+    /**
+     * Check if a customer is chargeable
+     *
+     * It returns true if the customer has a card that has not expired. Please note that even though the card
+     * seems valid, it may be rejected during payment though
+     *
+     * @return bool
+     */
+    public function isChargeable()
+    {
+        return ($card = $this->getCard()) && !$card->isExpired();
+    }
 }
