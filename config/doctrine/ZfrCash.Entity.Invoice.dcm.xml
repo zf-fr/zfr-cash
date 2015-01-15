@@ -16,8 +16,11 @@
         </many-to-one>
         <field name="periodStart" column="period_start" type="datetime" />
         <field name="periodEnd" column="period_end" type="datetime" />
+        <field name="startingBalance" column="starting_balance" type="integer" />
+        <field name="endingBalance" column="ending_balance" type="integer" />
         <field name="subtotal" type="integer" />
         <field name="total" type="integer" />
+        <field name="applicationFee" column="application_fee" type="integer" />
         <field name="tax" type="integer" />
         <field name="taxPercent" column="tax_percent" type="decimal" precision="5" scale="2" />
         <field name="amountDue" column="amount_due" type="integer" />

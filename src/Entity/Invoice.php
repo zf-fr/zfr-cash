@@ -60,12 +60,27 @@ class Invoice
     /**
      * @var int
      */
+    protected $startingBalance;
+
+    /**
+     * @var int
+     */
+    protected $endingBalance;
+
+    /**
+     * @var int
+     */
     protected $subtotal;
 
     /**
      * @var int
      */
     protected $total;
+
+    /**
+     * @var int
+     */
+    protected $applicationFee;
 
     /**
      * @var int
@@ -218,6 +233,38 @@ class Invoice
     }
 
     /**
+     * @param int $startingBalance
+     */
+    public function setStartingBalance($startingBalance)
+    {
+        $this->startingBalance = (int) $startingBalance;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStartingBalance()
+    {
+        return $this->startingBalance;
+    }
+
+    /**
+     * @param int $endingBalance
+     */
+    public function setEndingBalance($endingBalance)
+    {
+        $this->endingBalance = (int) $endingBalance;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndingBalance()
+    {
+        return $this->endingBalance;
+    }
+
+    /**
      * @param int $subtotal
      */
     public function setSubtotal($subtotal)
@@ -247,6 +294,22 @@ class Invoice
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * @param int $applicationFee
+     */
+    public function setApplicationFee($applicationFee)
+    {
+        $this->applicationFee = (int) $applicationFee;
+    }
+
+    /**
+     * @return int
+     */
+    public function getApplicationFee()
+    {
+        return $this->applicationFee;
     }
 
     /**

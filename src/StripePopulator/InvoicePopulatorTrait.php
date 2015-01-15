@@ -38,8 +38,11 @@ trait InvoicePopulatorTrait
         $invoice->setCreatedAt((new DateTime())->setTimestamp($stripeInvoice['date']));
         $invoice->setPeriodStart((new DateTime())->setTimestamp($stripeInvoice['period_start']));
         $invoice->setPeriodEnd((new DateTime())->setTimestamp($stripeInvoice['period_end']));
+        $invoice->setStartingBalance($stripeInvoice['starting_balance']);
+        $invoice->setEndingBalance($stripeInvoice['ending_balance']);
         $invoice->setSubtotal($stripeInvoice['subtotal']);
         $invoice->setTotal($stripeInvoice['total']);
+        $invoice->setApplicationFee($stripeInvoice['application_fee']);
         $invoice->setTax(isset($stripeInvoice['tax']) ? $stripeInvoice['tax'] : 0);
         $invoice->setTaxPercent(isset($stripeInvoice['tax_percent']) ? $stripeInvoice['tax_percent'] : 0);
         $invoice->setAmountDue($stripeInvoice['amount_due']);
