@@ -48,11 +48,6 @@ class Invoice
     protected $payer;
 
     /**
-     * @var Subscription|null
-     */
-    protected $subscription;
-
-    /**
      * @var DateTime
      */
     protected $periodStart;
@@ -188,22 +183,6 @@ class Invoice
     public function getPayer()
     {
         return $this->payer;
-    }
-
-    /**
-     * @param Subscription|null $subscription
-     */
-    public function setSubscription(Subscription $subscription = null)
-    {
-        $this->subscription = $subscription;
-    }
-
-    /**
-     * @return Subscription|null
-     */
-    public function getSubscription()
-    {
-        return $this->subscription;
     }
 
     /**

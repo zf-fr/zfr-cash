@@ -56,11 +56,6 @@ class InvoiceService implements EventManagerAwareInterface
     private $customerRepository;
 
     /**
-     * @var ObjectRepository
-     */
-    private $subscriptionRepository;
-
-    /**
      * @var StripeClient
      */
     private $stripeClient;
@@ -69,21 +64,18 @@ class InvoiceService implements EventManagerAwareInterface
      * @param ObjectManager               $objectManager
      * @param ObjectRepository            $invoiceRepository
      * @param CustomerRepositoryInterface $customerRepository
-     * @param ObjectRepository            $subscriptionRepository
      * @param StripeClient                $stripeClient
      */
     public function __construct(
         ObjectManager $objectManager,
         ObjectRepository $invoiceRepository,
         CustomerRepositoryInterface $customerRepository,
-        ObjectRepository $subscriptionRepository,
         StripeClient $stripeClient
     ) {
-        $this->objectManager          = $objectManager;
-        $this->invoiceRepository      = $invoiceRepository;
-        $this->customerRepository     = $customerRepository;
-        $this->subscriptionRepository = $subscriptionRepository;
-        $this->stripeClient           = $stripeClient;
+        $this->objectManager      = $objectManager;
+        $this->invoiceRepository  = $invoiceRepository;
+        $this->customerRepository = $customerRepository;
+        $this->stripeClient       = $stripeClient;
     }
 
     /**
@@ -107,7 +99,6 @@ class InvoiceService implements EventManagerAwareInterface
         $this->populateInvoiceFromStripeResource($invoice, $stripeInvoice);
 
         $invoice->setPayer($customer);
-        $invoice->setSubscription($subscription);
 
         // If customer handles VAT, we add the VAT info to the invoice
         if ($customer instanceof VatCustomerInterface) {
@@ -134,16 +125,10 @@ class InvoiceService implements EventManagerAwareInterface
         $invoice       = $this->invoiceRepository->findOneBy(['stripeId' => $stripeInvoice['id']]);
 
         if (null === $invoice) {
-            $customer     = $this->customerRepository->findOneByStripeId($stripeInvoice['customer']);
-            $subscription = null;
-
-            if (null !== $stripeInvoice['subscription']) {
-                $subscription = $this->subscriptionRepository->findOneBy(['stripeId' => $stripeInvoice['subscription']]);
-            }
+            $customer = $this->customerRepository->findOneByStripeId($stripeInvoice['customer']);
 
             $invoice = new Invoice();
             $invoice->setPayer($customer);
-            $invoice->setSubscription($subscription);
 
             // If customer handles VAT, we add the VAT info to the invoice
             if ($customer instanceof VatCustomerInterface) {

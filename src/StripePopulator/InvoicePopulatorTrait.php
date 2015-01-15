@@ -34,7 +34,8 @@ trait InvoicePopulatorTrait
      */
     protected function populateInvoiceFromStripeResource(Invoice $invoice, array $stripeInvoice)
     {
-        $invoice->setCreatedAt((new DateTime())->setTimestamp($stripeInvoice['created']));
+        $invoice->setStripeId($stripeInvoice['id']);
+        $invoice->setCreatedAt((new DateTime())->setTimestamp($stripeInvoice['date']));
         $invoice->setPeriodStart((new DateTime())->setTimestamp($stripeInvoice['period_start']));
         $invoice->setPeriodEnd((new DateTime())->setTimestamp($stripeInvoice['period_end']));
         $invoice->setSubtotal($stripeInvoice['subtotal']);
@@ -62,6 +63,8 @@ trait InvoicePopulatorTrait
                 $lineItem->setAmount($lineItemData['amount']);
                 $lineItem->setDescription($lineItemData['description']);
                 $lineItem->setCurrency($lineItemData['currency']);
+
+                $lineItems[] = $lineItem;
             }
 
             $invoice->setLineItems($lineItems);

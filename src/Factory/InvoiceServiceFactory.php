@@ -20,7 +20,9 @@ namespace ZfrCash\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\Entity\Invoice;
+use ZfrCash\Entity\Subscription;
 use ZfrCash\Options\ModuleOptions;
 use ZfrCash\Service\InvoiceService;
 use ZfrStripe\Client\StripeClient;
@@ -45,9 +47,12 @@ class InvoiceServiceFactory implements FactoryInterface
         /** @var \Doctrine\Common\Persistence\ObjectRepository $invoiceRepository */
         $invoiceRepository = $objectManager->getRepository(Invoice::class);
 
+        /** @var \ZfrCash\Repository\CustomerRepositoryInterface $customerRepository */
+        $customerRepository = $objectManager->getRepository(CustomerInterface::class);
+
         /** @var StripeClient $stripeClient */
         $stripeClient = $serviceLocator->get(StripeClient::class);
 
-        return new InvoiceService($objectManager, $invoiceRepository, $stripeClient);
+        return new InvoiceService($objectManager, $invoiceRepository, $customerRepository, $stripeClient);
     }
 }

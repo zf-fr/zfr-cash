@@ -14,8 +14,6 @@
         <many-to-one field="payer" target-entity="ZfrCash\Entity\CustomerInterface">
             <join-column on-delete="CASCADE" />
         </many-to-one>
-        <many-to-one field="subscription" target-entity="ZfrCash\Entity\Subscription">
-        </many-to-one>
         <field name="periodStart" column="period_start" type="datetime" />
         <field name="periodEnd" column="period_end" type="datetime" />
         <field name="subtotal" type="integer" />
@@ -35,9 +33,9 @@
             </cascade>
         </one-to-many>
         <field name="description" type="string" length="1000" nullable="true" />
-        <field name="vatNumber" column="vat_number" type="string" length="60" />
-        <field name="vatCountry" column="vat_country" type="string" length="2" />
-        <field name="exportUrl" column="export_url" type="string" />
+        <field name="vatNumber" column="vat_number" type="string" length="60" nullable="true" />
+        <field name="vatCountry" column="vat_country" type="string" length="2" nullable="true" />
+        <field name="exportUrl" column="export_url" type="string" nullable="true" />
         <field name="createdAt" column="created_at" type="datetime" />
     </entity>
 </doctrine-mapping>
