@@ -35,14 +35,14 @@ trait VatCustomerTrait
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=60)
+     * @ORM\Column(type="string", length=60, nullable=true)
      */
     protected $vatNumber;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=2)
+     * @ORM\Column(type="string", length=2, nullable=true)
      */
     protected $vatCountry;
 
