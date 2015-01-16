@@ -111,6 +111,27 @@ class InvoiceService implements EventManagerAwareInterface
     }
 
     /**
+     * Return a selectable object
+     *
+     * @return \Doctrine\Common\Collections\Selectable
+     */
+    public function getAll()
+    {
+        return $this->invoiceRepository;
+    }
+
+    /**
+     * Get all the invoices for a given payer (customer)
+     *
+     * @param  CustomerInterface $customer
+     * @return \Doctrine\Common\Collections\Selectable
+     */
+    public function getAllByPayer(CustomerInterface $customer)
+    {
+        return $this->invoiceRepository->findBy(['payer' => $customer]);
+    }
+
+    /**
      * Sync invoice from a Stripe event
      *
      * @param array $stripeEvent
