@@ -87,16 +87,16 @@ class WebhookListenerController extends AbstractActionController
     }
 
     /**
-     * @param  array $event
+     * @param  array $stripeEvent
      * @return HttpResponse
      */
-    public function handleEvent(array $event)
+    public function handleEvent(array $stripeEvent)
     {
         $response = new HttpResponse();
 
         if ($this->moduleOptions->getValidateWebhooks()) {
             try {
-                $event = $this->stripeClient->getEvent(['id' => $event['id']]);
+                $stripeEvent = $this->stripeClient->getEvent(['id' => $stripeEvent['id']]);
             } catch (StripeNotFoundException $exception) {
                 // If the event is not found, then we simply return silently. This typically only happen
                 // with someone is trying to hack your system with scam events
@@ -104,7 +104,7 @@ class WebhookListenerController extends AbstractActionController
             }
         }
 
-        $event              = new WebhookEvent($event['type'], $event);
+        $event              = new WebhookEvent($stripeEvent['type'], $stripeEvent);
         $responseCollection = $this->getEventManager()->trigger(WebhookEvent::WEBHOOK_RECEIVED, $event);
 
         $message = '';
@@ -115,10 +115,10 @@ class WebhookListenerController extends AbstractActionController
             }
         }
 
-        $response->setReasonPhrase(sprintf(
+        $response->setContent(sprintf(
             'Stripe event "%s" of type "%s" was received and processed. Logged message(s): %s',
-            $event['id'],
-            $event['type'],
+            $stripeEvent['id'],
+            $stripeEvent['type'],
             $message
         ));
 
