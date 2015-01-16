@@ -127,6 +127,10 @@ class InvoiceService implements EventManagerAwareInterface
         if (null === $invoice) {
             $customer = $this->customerRepository->findOneByStripeId($stripeInvoice['customer']);
 
+            if (null === $customer) {
+                return;
+            }
+
             $invoice = new Invoice();
             $invoice->setPayer($customer);
 

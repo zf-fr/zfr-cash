@@ -191,9 +191,19 @@ class DiscountService
 
         if (null !== $stripeDiscount['subscription']) {
             $subscription = $this->subscriptionRepository->findOneBy(['stripeId' => $stripeDiscount['subscription']]);
-            $discount     = $subscription->getDiscount();
+
+            if (null === $subscription) {
+                return;
+            }
+
+            $discount = $subscription->getDiscount();
         } else {
             $customer = $this->customerRepository->findOneByStripeId($stripeDiscount['customer']);
+
+            if (null === $customer) {
+                return;
+            }
+
             $discount = $customer->getDiscount();
         }
 
