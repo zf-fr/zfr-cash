@@ -11,7 +11,7 @@
         </id>
 
         <field name="stripeId" column="stripe_id" type="string" length="255" unique="true" />
-        <many-to-one field="payer" target-entity="ZfrCash\Entity\CustomerInterface">
+        <many-to-one field="payer" target-entity="ZfrCash\Entity\CustomerInterface" fetch="EAGER">
             <join-column on-delete="CASCADE" />
         </many-to-one>
         <field name="periodStart" column="period_start" type="datetime" />
