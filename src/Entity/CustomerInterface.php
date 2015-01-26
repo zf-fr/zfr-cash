@@ -63,15 +63,15 @@ interface CustomerInterface
     /**
      * Set the discount for the customer (or remove it by setting null)
      *
-     * @param  Discount|null $discount
+     * @param  CustomerDiscount|null $discount
      * @return void
      */
-    public function setDiscount(Discount $discount = null);
+    public function setDiscount(CustomerDiscount $discount = null);
 
     /**
      * Get the discount (if any) attached to the customer
      *
-     * @return Discount|null
+     * @return CustomerDiscount|null
      */
     public function getDiscount();
 }

@@ -45,9 +45,9 @@ trait CustomerTrait
     protected $card;
 
     /**
-     * @var Discount|null
+     * @var CustomerDiscount|null
      *
-     * @ORM\OneToMany(targetEntity="ZfrCash\Entity\Discount", inversedBy="customer")
+     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\CustomerDiscount", inversedBy="customer")
      */
     protected $discount;
 
@@ -84,15 +84,15 @@ trait CustomerTrait
     }
 
     /**
-     * @param Discount|null $discount
+     * @param CustomerDiscount|null $discount
      */
-    public function setDiscount(Discount $discount = null)
+    public function setDiscount(CustomerDiscount $discount = null)
     {
         $this->discount = $discount;
     }
 
     /**
-     * @return Discount|null
+     * @return CustomerDiscount|null
      */
     public function getDiscount()
     {

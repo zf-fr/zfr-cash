@@ -21,14 +21,14 @@ namespace ZfrCash\Entity;
 use DateTime;
 
 /**
- * Represents a discount
+ * Represents an abstract discount
  *
- * Either subscription or customer may have a coupon
+ * A discount may be applied either to a customer or a subscription
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class Discount
+abstract class AbstractDiscount
 {
     /**
      * @var int
@@ -39,11 +39,6 @@ class Discount
      * @var CustomerInterface
      */
     protected $customer;
-
-    /**
-     * @var Subscription|null
-     */
-    protected $subscription;
 
     /**
      * @var Coupon
@@ -83,26 +78,6 @@ class Discount
     public function getCustomer()
     {
         return $this->customer;
-    }
-
-    /**
-     * @param Subscription|null $subscription
-     */
-    public function setSubscription($subscription = null)
-    {
-        if (null === $subscription) {
-            $subscription->setDiscount($this);
-        }
-
-        $this->subscription = $subscription;
-    }
-
-    /**
-     * @return Subscription|null
-     */
-    public function getSubscription()
-    {
-        return $this->subscription;
     }
 
     /**

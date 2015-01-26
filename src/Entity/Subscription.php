@@ -49,7 +49,7 @@ class Subscription
     protected $payer;
 
     /**
-     * @var Discount|null
+     * @var SubscriptionDiscount|null
      */
     protected $discount;
 
@@ -155,15 +155,15 @@ class Subscription
     }
 
     /**
-     * @param Discount|null $discount
+     * @param SubscriptionDiscount|null $discount
      */
-    public function setDiscount(Discount $discount = null)
+    public function setDiscount(SubscriptionDiscount $discount = null)
     {
         $this->discount = $discount;
     }
 
     /**
-     * @return Discount|null
+     * @return SubscriptionDiscount|null
      */
     public function getDiscount()
     {
