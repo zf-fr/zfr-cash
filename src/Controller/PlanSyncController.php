@@ -18,7 +18,9 @@
 
 namespace ZfrCash\Controller;
 
+use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\Controller\AbstractActionController;
+use ZfrCash\Service\PlanService;
 
 /**
  * Controller used to sync plans (using Stripe as the reference)
@@ -28,8 +30,28 @@ use Zend\Mvc\Controller\AbstractActionController;
  */
 class PlanSyncController extends AbstractActionController
 {
+    /**
+     * @var PlanService
+     */
+    private $planService;
+
+    /**
+     * @param PlanService $planService
+     */
+    public function __construct(PlanService $planService)
+    {
+        $this->planService = $planService;
+    }
+
+    /**
+     * Sync all the plans from Stripe
+     *
+     * @return HttpResponse
+     */
     public function syncAction()
     {
+        $this->planService->syncFromStripe();
 
+        return new HttpResponse();
     }
 }

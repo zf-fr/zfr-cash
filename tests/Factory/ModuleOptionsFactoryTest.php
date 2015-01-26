@@ -16,21 +16,25 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\Repository;
+namespace ZfrCashTest\Factory;
 
-use ZfrCash\Entity\CustomerInterface;
+use PHPUnit_Framework_TestCase;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfrCash\Factory\ModuleOptionsFactory;
+use ZfrCash\Options\ModuleOptions;
 
-/**
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
- */
-interface CustomerRepositoryInterface
+class ModuleOptionsFactoryTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * Find a Stripe customer by its Stripe identifier
-     *
-     * @param  string $stripeId
-     * @return CustomerInterface|null
-     */
-    public function findOneByStripeId($stripeId);
+    public function testFactory()
+    {
+        $config = ['zfr_cash' => []];
+
+        $serviceLocator = $this->getMock(ServiceLocatorInterface::class);
+        $serviceLocator->expects($this->once())->method('get')->with('Config')->willReturn($config);
+
+        $factory  = new ModuleOptionsFactory();
+        $instance = $factory->createService($serviceLocator);
+
+        $this->assertInstanceOf(ModuleOptions::class, $instance);
+    }
 }

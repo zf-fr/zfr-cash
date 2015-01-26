@@ -118,6 +118,32 @@ class PlanService
     }
 
     /**
+     * Sync all the plans from Stripe (useful when installing ZfrCash for the first time)
+     *
+     * If you have a lot of plan, this can be quite expensive, so be sure to do this only as an install process
+     *
+     * @return void
+     */
+    public function syncFromStripe()
+    {
+        $planIterator = $this->stripeClient->getPlansIterator();
+
+        foreach ($planIterator as $stripePlan) {
+            $createdAt = (new DateTime())->setTimestamp($stripePlan['created']);
+            $plan      = $this->planRepository->findOneBy(['stripeId' => $stripePlan['id'], 'createdAt' => $createdAt]);
+
+            if (null === $plan) {
+                $plan = new Plan();
+                $this->objectManager->persist($plan);
+            }
+
+            $this->populatePlanFromStripeResource($plan, $stripePlan);
+        }
+
+        $this->objectManager->flush();
+    }
+
+    /**
      * Get a plan by its ID
      *
      * @param  int $id

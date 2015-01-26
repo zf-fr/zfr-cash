@@ -122,4 +122,15 @@ class CustomerService
 
         return $customer;
     }
+
+    /**
+     * Get one customer by its Stripe ID
+     *
+     * @param  string $stripeId
+     * @return CustomerInterface|null
+     */
+    public function getOneByStripeId($stripeId)
+    {
+        return $this->customerRepository->findOneByStripeId($stripeId);
+    }
 }

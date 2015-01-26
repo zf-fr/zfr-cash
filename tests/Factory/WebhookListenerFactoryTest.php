@@ -16,21 +16,22 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\Repository;
+namespace ZfrCashTest\Factory;
 
-use ZfrCash\Entity\CustomerInterface;
+use PHPUnit_Framework_TestCase;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfrCash\Factory\WebhookListenerFactory;
+use ZfrCash\Listener\WebhookListener;
 
-/**
- * @author  Michaël Gallego <mic.gallego@gmail.com>
- * @licence MIT
- */
-interface CustomerRepositoryInterface
+class WebhookListenerFactoryTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * Find a Stripe customer by its Stripe identifier
-     *
-     * @param  string $stripeId
-     * @return CustomerInterface|null
-     */
-    public function findOneByStripeId($stripeId);
+    public function testFactory()
+    {
+        $serviceLocator = $this->getMock(ServiceLocatorInterface::class);
+
+        $factory  = new WebhookListenerFactory();
+        $instance = $factory->createService($serviceLocator);
+
+        $this->assertInstanceOf(WebhookListener::class, $instance);
+    }
 }

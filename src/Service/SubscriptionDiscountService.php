@@ -172,14 +172,13 @@ class SubscriptionDiscountService
 
         $discount = $this->subscriptionDiscountRepository->findOneBy(['subscription' => $subscription]);
 
-        if (null !== $discount) {
-            // A discount is immutable and cannot be updated, so if it already exists, we just skip
-            return;
-        }
+        if (null === $discount) {
+            $discount = new SubscriptionDiscount();
+            $discount->setCustomer($subscription->getPayer());
+            $discount->setSubscription($subscription);
 
-        $discount = new SubscriptionDiscount();
-        $discount->setCustomer($subscription->getPayer());
-        $discount->setSubscription($subscription);
+            $this->objectManager->persist($discount);
+        }
 
         $this->populateDiscountFromStripeResource($discount, $stripeDiscount);
 

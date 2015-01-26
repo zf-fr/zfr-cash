@@ -17,6 +17,7 @@
  */
 
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
+use ZfrCash\Controller\PlanSyncController;
 use ZfrCash\Controller\WebhookListenerController;
 use ZfrCash\Factory\CardServiceFactory;
 use ZfrCash\Factory\CustomerDiscountServiceFactory;
@@ -52,6 +53,7 @@ return [
 
     'controllers' => [
         'factories' => [
+            PlanSyncController::class        => PlanSyncControllerFactory::class,
             WebhookListenerController::class => WebhookListenerControllerFactory::class
         ]
     ],

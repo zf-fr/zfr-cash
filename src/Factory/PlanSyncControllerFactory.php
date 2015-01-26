@@ -16,21 +16,30 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\Repository;
+namespace ZfrCash\Factory;
 
-use ZfrCash\Entity\CustomerInterface;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfrCash\Controller\PlanSyncController;
+use ZfrCash\Service\PlanService;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-interface CustomerRepositoryInterface
+class PlanSyncControllerFactory implements FactoryInterface
 {
     /**
-     * Find a Stripe customer by its Stripe identifier
-     *
-     * @param  string $stripeId
-     * @return CustomerInterface|null
+     * {@inheritDoc}
      */
-    public function findOneByStripeId($stripeId);
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        /** @var ServiceLocatorInterface $parentLocator */
+        $parentLocator = $serviceLocator->getServiceLocator();
+
+        /** @var PlanService $planService */
+        $planService = $parentLocator->get(PlanService::class);
+
+        return new PlanSyncController($planService);
+    }
 }

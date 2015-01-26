@@ -23,6 +23,7 @@
     "doctrine/doctrine-module": "~0.9",
     "zfr/zfr-stripe-module": "~3.0",
     "zendframework/zend-mvc": "~2.2",
+    "zendframework/zend-http": "~2.2",
     "zendframework/zend-eventmanager": "~2.2",
     "zendframework/zend-modulemanager": "~2.2",
     "zendframework/zend-servicemanager": "~2.2"

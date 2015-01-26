@@ -25,9 +25,12 @@ use ZfrCash\Controller\WebhookListenerController;
 use ZfrCash\Event\WebhookEvent;
 use ZfrCash\Options\ModuleOptions;
 use ZfrCash\Service\CardService;
+use ZfrCash\Service\CustomerDiscountService;
+use ZfrCash\Service\CustomerService;
 use ZfrCash\Service\DiscountService;
 use ZfrCash\Service\InvoiceService;
 use ZfrCash\Service\PlanService;
+use ZfrCash\Service\SubscriptionDiscountService;
 use ZfrCash\Service\SubscriptionService;
 
 /**
@@ -113,11 +116,67 @@ final class WebhookListener extends AbstractListenerAggregate
      * @param  array $stripeEvent
      * @return string
      */
-    public function handleDiscountEvent(array $stripeEvent)
+    private function handleDiscountEvent(array $stripeEvent)
     {
-        /** @var DiscountService $discountService */
-        $discountService = $this->serviceLocator->get(DiscountService::class);
-        $discountService->syncFromStripeEvent($stripeEvent);
+        $stripeDiscount = $stripeEvent['data']['object'];
+
+        if (null === $stripeDiscount['subscription']) {
+            return $this->handleCustomerDiscountEvent($stripeEvent);
+        } else {
+            return $this->handleSubscriptionDiscountEvent($stripeEvent);
+        }
+    }
+
+    /**
+     * Handle a customer discount Stripe event
+     *
+     * @param  array $stripeEvent
+     * @return string
+     */
+    private function handleCustomerDiscountEvent(array $stripeEvent)
+    {
+        /** @var CustomerDiscountService $customerDiscountService */
+        $customerDiscountService = $this->serviceLocator->get(CustomerDiscountService::class);
+        $stripeDiscount          = $stripeEvent['data']['object'];
+
+        if ($stripeEvent['type'] === 'customer.discount.deleted') {
+            /** @var CustomerService $customerService */
+            $customerService = $this->serviceLocator->get(CustomerService::class);
+            $customer        = $customerService->getOneByStripeId($stripeDiscount['customer']);
+
+            if (null !== $customer && ($discount = $customer->getDiscount())) {
+                $customerDiscountService->remove($discount);
+            }
+        }
+
+        $customerDiscountService->syncFromStripeResource($stripeEvent);
+
+        return 'Event has been properly processed';
+    }
+
+    /**
+     * Handle a subscription discount Stripe event
+     *
+     * @param  array $stripeEvent
+     * @return string
+     */
+    private function handleSubscriptionDiscountEvent(array $stripeEvent)
+    {
+        /** @var SubscriptionDiscountService $subscriptionDiscountService */
+        $subscriptionDiscountService = $this->serviceLocator->get(SubscriptionDiscountService::class);
+        $stripeDiscount              = $stripeEvent['data']['object'];
+
+        if ($stripeEvent['type'] === 'customer.discount.deleted') {
+            /** @var SubscriptionService $subscriptionService */
+            $subscriptionService = $this->serviceLocator->get(SubscriptionService::class);
+            $subscription        = $subscriptionService->getOneByStripeId($stripeDiscount['subscription']);
+
+            if (null !== $subscription && ($discount = $subscription->getDiscount())) {
+                $subscriptionDiscountService->remove($discount);
+            }
+        }
+
+        $subscriptionDiscountService->syncFromStripeResource($stripeEvent);
 
         return 'Event has been properly processed';
     }
@@ -125,14 +184,15 @@ final class WebhookListener extends AbstractListenerAggregate
     /**
      * Handle a card Stripe event
      *
+     * @internal
      * @param  array $stripeEvent
      * @return string
      */
-    public function handleCardEvent(array $stripeEvent)
+    private function handleCardEvent(array $stripeEvent)
     {
         /** @var CardService $cardService */
         $cardService = $this->serviceLocator->get(CardService::class);
-        $cardService->syncFromStripeEvent($stripeEvent);
+        $cardService->syncFromStripeResource($stripeEvent['data']['object']);
 
         return 'Event has been properly processed';
     }
@@ -143,11 +203,11 @@ final class WebhookListener extends AbstractListenerAggregate
      * @param  array $stripeEvent
      * @return string
      */
-    public function handleSubscriptionEvent(array $stripeEvent)
+    private function handleSubscriptionEvent(array $stripeEvent)
     {
         /** @var SubscriptionService $subscriptionService */
         $subscriptionService = $this->serviceLocator->get(SubscriptionService::class);
-        $subscriptionService->syncFromStripeEvent($stripeEvent);
+        $subscriptionService->syncFromStripeResource($stripeEvent);
 
         return 'Event has been properly processed';
     }
@@ -158,11 +218,21 @@ final class WebhookListener extends AbstractListenerAggregate
      * @param  array $stripeEvent
      * @return string
      */
-    public function handlePlanEvent(array $stripeEvent)
+    private function handlePlanEvent(array $stripeEvent)
     {
         /** @var PlanService $planService */
         $planService = $this->serviceLocator->get(PlanService::class);
-        $planService->syncFromStripeEvent($stripeEvent);
+        $stripePlan  = $stripeEvent['data']['object'];
+
+        if ($stripeEvent['type'] === 'plan.deleted') {
+            $plan = $planService->getByStripeId($stripePlan['id']);
+
+            if (null !== $plan) {
+                $planService->deactivate($plan);
+            }
+        } else {
+            $planService->syncFromStripeResource($stripePlan);
+        }
 
         return 'Event has been properly processed';
     }
