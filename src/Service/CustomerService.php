@@ -86,6 +86,7 @@ class CustomerService
      *    - email: set as the "email" field in Stripe
      *    - description: set as the "description" field in Stripe
      *    - metadata: set as the "metadata" field in Stripe
+     *    - idempotency_key: a key that is used to prevent an operation for being executed twice
      *
      * @param  CustomerInterface $customer
      * @param  array             $options
@@ -94,12 +95,21 @@ class CustomerService
     public function create(CustomerInterface $customer, array $options = [])
     {
         $stripeCustomer = $this->stripeClient->createCustomer(array_filter([
-            'card'        => isset($options['card']) ? $options['card'] : null,
-            'coupon'      => isset($options['coupon']) ? $options['coupon'] : null,
-            'description' => isset($options['description']) ? $options['description'] : null,
-            'email'       => isset($options['email']) ? $options['email'] : null,
-            'metadata'    => isset($options['metadata']) ? $options['metadata'] : null
+            'card'            => isset($options['card']) ? $options['card'] : null,
+            'coupon'          => isset($options['coupon']) ? $options['coupon'] : null,
+            'description'     => isset($options['description']) ? $options['description'] : null,
+            'email'           => isset($options['email']) ? $options['email'] : null,
+            'metadata'        => isset($options['metadata']) ? $options['metadata'] : null,
+            'idempotency_key' => isset($options['idempotency_key']) ? $options['idempotency_key'] : null
         ]));
+
+        // If an idempotency key is given, this means that the user explicitly want to protect the POST operation,
+        // hence this means that the subscription may have already been created, if that's the case we just return it
+        if (isset($options['idempotency_key'])) {
+            if ($customer = $this->customerRepository->findOneByStripeId($stripeCustomer['id'])) {
+                return $customer;
+            }
+        }
 
         $customer->setStripeId($stripeCustomer['id']);
 

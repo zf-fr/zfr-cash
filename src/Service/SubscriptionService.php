@@ -88,6 +88,7 @@ class SubscriptionService
      *      - application_fee_percent: if you are creating subscription on behalf of other through Stripe Connect
      *      - billing_cycle_anchor: a DateTime to define when the subscription must start its recurring period
      *      - metadata: any pair of metadata
+     *      - idempotency_key: a key that is used to prevent an operation for being executed twice
      *
      * @param  CustomerInterface $customer
      * @param  BillableInterface $billable
@@ -105,8 +106,17 @@ class SubscriptionService
             'trial_end'               => isset($options['trial_end']) ? $options['trial_end']->getTimestamp() : null,
             'application_fee_percent' => isset($options['application_fee_percent']) ? $options['application_fee_percent'] : null,
             'billing_cycle_anchor'    => isset($options['billing_cycle_anchor']) ? $options['billing_cycle_anchor']->getTimestamp() : null,
-            'metadata'                => isset($options['metadata']) ? $options['metadata'] : null
+            'metadata'                => isset($options['metadata']) ? $options['metadata'] : null,
+            'idempotency_key'         => isset($options['idempotency_key']) ? $options['idempotency_key'] : null
         ]));
+
+        // If an idempotency key is given, this means that the user explicitly want to protect the POST operation,
+        // hence this means that the subscription may have already been created, if that's the case we just return it
+        if (isset($options['idempotency_key'])) {
+            if ($subscription = $this->subscriptionRepository->findOneBy(['stripeId' => $stripeSubscription['id']])) {
+                return $subscription;
+            }
+        }
 
         $subscription = new Subscription();
         $subscription->setPayer($customer);

@@ -327,6 +327,7 @@ Supported options are:
 * `card`: can either be a card token (created using Stripe.JS) or a full hash containing card properties.
 * `coupon`: a coupon to attach to the customer
 * `metadata`: a key value that set the metadata Stripe attributes
+* `idempotency_key`: a key that is used to prevent an operation for being executed twice
 
 All of those properties are optional.
 
@@ -383,6 +384,7 @@ plan, and options. Supported options are:
 * `application_fee_percent`: if you are creating subscription on behalf of other through Stripe Connect
 * `billing_cycle_anchor`: a DateTime that defines when to start the recurring payments
 * `metadata`: any pair of metadata
+* `idempotency_key`: a key that is used to prevent an operation for being executed twice
 
 For instance:
 
@@ -395,6 +397,16 @@ $subscription = $subscriptionService->create($customer, $billable, $plan, [
 
 Internally, ZfrCash will create the subscription on Stripe, save it in your database, and make the different
 connections between the payer, the subscription and the billable resource.
+
+> Note: the `idempotency_key` is a new feature that Stripe recently added, and that ZfrCash already supports. Basically,
+it allows to prevent an operation from being executed twice. For instance, let's say that you are using the subscription
+service to create a subscription in a delayed job executed by a worker. The job is executed, the subscription service
+correctly create the subscription (and the customer starts paying), but the job just fails after that for any reason (a
+HTTP call has timed out, the server has been shut down...). The job is therefore automatically reinserted for later
+processing... but the problem is that the subscription will be created again, and your customer will pay twice! To avoid
+this issue, you can pass an `idempotency_key` (that can be anything, but in this example, the unique identifier of the
+job is a good candidate). During 24 hours, if you try to create a subscription with the exact same idempotency key,
+Stripe will return the exact same response, without create a new subscription each time!
 
 #### cancel
 
