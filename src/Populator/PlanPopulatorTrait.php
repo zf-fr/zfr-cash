@@ -16,38 +16,30 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\StripePopulator;
+namespace ZfrCash\Populator;
 
 use DateTime;
-use ZfrCash\Entity\Coupon;
-use ZfrCash\Entity\Discount;
+use ZfrCash\Entity\Plan;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-trait DiscountPopulatorTrait
+trait PlanPopulatorTrait
 {
     /**
-     * @param Discount $discount
-     * @param array    $stripeDiscount
+     * @param Plan  $plan
+     * @param array $stripePlan
      */
-    protected function populateDiscountFromStripeResource(Discount $discount, array $stripeDiscount)
+    protected function populatePlanFromStripeResource(Plan $plan, array $stripePlan)
     {
-        $coupon  = $discount->getCoupon() ?: new Coupon();
-
-        $stripeCoupon = $stripeDiscount['coupon'];
-
-        $coupon->setCode($stripeCoupon['id']);
-        $coupon->setAmountOff($stripeCoupon['amount_off']);
-        $coupon->setCurrency($stripeCoupon['currency']);
-        $coupon->setPercentOff($stripeCoupon['percent_off']);
-
-        $discount->setCoupon($coupon);
-        $discount->setStartedAt((new DateTime())->setTimestamp($stripeDiscount['start']));
-
-        if (null !== $stripeDiscount['end']) {
-            $discount->setEndAt((new DateTime())->setTimestamp($stripeDiscount['end']));
-        }
+        $plan->setStripeId($stripePlan['id']);
+        $plan->setName($stripePlan['name']);
+        $plan->setAmount($stripePlan['amount']);
+        $plan->setCurrency($stripePlan['currency']);
+        $plan->setInterval($stripePlan['interval']);
+        $plan->setIntervalCount($stripePlan['interval_count']);
+        $plan->setTrialPeriodDays($stripePlan['trial_period_days']);
+        $plan->setCreatedAt((new DateTime())->setTimestamp($stripePlan['created']));
     }
 }

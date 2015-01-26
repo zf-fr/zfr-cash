@@ -30,6 +30,22 @@ class SubscriptionDiscount extends AbstractDiscount
     protected $subscription;
 
     /**
+     * @param CustomerInterface $customer
+     */
+    public function setCustomer($customer)
+    {
+        $this->customer = $customer;
+    }
+
+    /**
+     * @return CustomerInterface
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
      * @param Subscription $subscription
      */
     public function setSubscription($subscription)

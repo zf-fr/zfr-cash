@@ -56,28 +56,19 @@ abstract class AbstractDiscount
     protected $endAt;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->coupon = new Coupon();
+    }
+
+    /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param CustomerInterface $customer
-     */
-    public function setCustomer($customer)
-    {
-        $customer->setDiscount($this);
-        $this->customer = $customer;
-    }
-
-    /**
-     * @return CustomerInterface
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
     }
 
     /**

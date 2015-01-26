@@ -18,14 +18,13 @@
 
 namespace ZfrCash\Repository;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use ZfrCash\Entity\CustomerInterface;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-interface CustomerRepositoryInterface extends ObjectRepository
+interface CustomerRepositoryInterface
 {
     /**
      * Find a Stripe customer by its Stripe identifier

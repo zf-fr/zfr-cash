@@ -16,7 +16,7 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\StripePopulator;
+namespace ZfrCash\Populator;
 
 use ZfrCash\Entity\Card;
 

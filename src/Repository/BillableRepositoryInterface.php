@@ -18,7 +18,6 @@
 
 namespace ZfrCash\Repository;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use ZfrCash\Entity\BillableInterface;
 use ZfrCash\Entity\Subscription;
 
@@ -26,7 +25,7 @@ use ZfrCash\Entity\Subscription;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-interface BillableRepositoryInterface extends ObjectRepository
+interface BillableRepositoryInterface
 {
     /**
      * Get a billable object by its subscription

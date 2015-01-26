@@ -19,14 +19,12 @@
 namespace ZfrCash\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use ZfrCash\Entity\Card;
+use ZfrCash\Entity\CustomerDiscount;
 use ZfrCash\Entity\CustomerInterface;
-use ZfrCash\Entity\Discount;
-use ZfrCash\Entity\VatCustomerInterface;
 use ZfrCash\Repository\CustomerRepositoryInterface;
-use ZfrCash\StripePopulator\CardPopulatorTrait;
-use ZfrCash\StripePopulator\DiscountPopulatorTrait;
+use ZfrCash\Populator\CardPopulatorTrait;
+use ZfrCash\Populator\DiscountPopulatorTrait;
 use ZfrStripe\Client\StripeClient;
 
 /**
@@ -38,7 +36,7 @@ use ZfrStripe\Client\StripeClient;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class CustomerService 
+class CustomerService
 {
     use CardPopulatorTrait;
     use DiscountPopulatorTrait;
@@ -76,6 +74,10 @@ class CustomerService
     /**
      * Create a new Stripe customer object
      *
+     * Note that you are responsible to pass your own instance of a customer. This is more logical because
+     * most of the time, the customer will be your own user class, and there is high probability that you have
+     * already created it elsewhere
+     *
      * You can pass an optional card token (created using Stripe.js), an optional coupon and some additional
      * options. Supported options are:
      *
@@ -83,12 +85,13 @@ class CustomerService
      *    - description: set as the "description" field in Stripe
      *    - metadata: set as the "metadata" field in Stripe
      *
-     * @param  string|null $cardToken
-     * @param  string|null $coupon
-     * @param  array       $options
+     * @param  CustomerInterface $customer
+     * @param  string|null       $cardToken
+     * @param  string|null       $coupon
+     * @param  array             $options
      * @return CustomerInterface
      */
-    public function create($cardToken = null, $coupon = null, array $options = [])
+    public function create(CustomerInterface $customer, $cardToken = null, $coupon = null, array $options = [])
     {
         $stripeCustomer = $this->stripeClient->createCustomer(array_filter([
             'card'        => $cardToken,
@@ -98,10 +101,6 @@ class CustomerService
             'metadata'    => isset($options['metadata']) ? $options['metadata'] : null
         ]));
 
-        $className = $this->customerRepository->getClassName();
-
-        /** @var CustomerInterface $customer */
-        $customer = new $className;
         $customer->setStripeId($stripeCustomer['id']);
 
         if (!empty($stripeCustomer['cards']['data'])) {
@@ -112,14 +111,11 @@ class CustomerService
         }
 
         if (null !== $stripeCustomer['discount']) {
-            $discount = new Discount();
+            $discount = new CustomerDiscount();
             $customer->setDiscount($discount);
 
             $this->populateDiscountFromStripeResource($discount, $stripeCustomer['discount']);
         }
-
-        $customer->setCard();
-        $customer->setDiscount();
 
         $this->objectManager->persist($customer);
         $this->objectManager->flush();
