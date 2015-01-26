@@ -19,6 +19,7 @@
 namespace ZfrCash\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectRepository;
 use ZfrCash\Entity\Card;
 use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\StripePopulator\CardPopulatorTrait;
@@ -37,6 +38,9 @@ class CardService
      */
     private $objectManager;
 
+    /** @var ObjectRepository */
+    private $cardRepository;
+
     /**
      * @var StripeClient
      */
@@ -53,7 +57,7 @@ class CardService
     }
 
     /**
-     * Create a new card, and attach it to a customer
+     * Create a new card, and attach it to a customer as its default card
      *
      * If customer had a previous default card, then the old card is deleted
      *
@@ -63,10 +67,19 @@ class CardService
      */
     public function attachToCustomer(CustomerInterface $customer, $cardToken)
     {
-        $stripeCard = $this->stripeClient->createCard([
-            'customer' => $customer->getStripeId(),
-            'card'     => (string) $cardToken
+        $stripeCustomer = $this->stripeClient->updateCustomer([
+            'id'   => $customer->getStripeId(),
+            'card' => (string) $cardToken
         ]);
+
+        // Get the default card from the customers card
+        $stripeDefaultCard = [];
+
+        foreach ($stripeCustomer['cards']['data'] as $stripeCard) {
+            if ($stripeCard['id'] === $stripeCustomer['default_card']) {
+                $stripeDefaultCard = $stripeCard;
+            }
+        }
 
         // If the customer had a previous card, we must remove it before saving the new one
         if (null !== $customer->getCard()) {
@@ -76,7 +89,7 @@ class CardService
         $card = new Card();
         $customer->setCard($card);
 
-        $this->populateCardFromStripeResource($card, $stripeCard);
+        $this->populateCardFromStripeResource($card, $stripeDefaultCard);
 
         $this->objectManager->persist($card);
         $this->objectManager->flush();
@@ -94,5 +107,34 @@ class CardService
     {
         $this->objectManager->remove($card);
         $this->objectManager->flush();
+    }
+
+    /**
+     * Sync a plan from a Stripe event
+     *
+     * @param  array $stripeEvent
+     * @return void
+     */
+    public function syncFromStripeEvent(array $stripeEvent)
+    {
+        // Just to be sure we do not process unwanted event
+        if (!in_array($stripeEvent['type'], ['customer.card.updated'], true)) {
+            return;
+        }
+
+        $stripeCard = $stripeEvent['data']['object'];
+
+        // First, let's try to retrieve the card to see if it already exists in database
+        $card = $this->cardRepository->findOneBy([
+            'stripeId'  => $stripeCard['id']
+        ]);
+
+        if (null === $card) {
+            return;
+        }
+
+        $this->populateCardFromStripeResource($card, $stripeCard);
+
+        $this->objectManager->flush($card);
     }
 }

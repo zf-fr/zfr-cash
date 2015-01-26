@@ -141,7 +141,7 @@ class SubscriptionService
         $this->populateSubscriptionFromStripeResource($subscription, $stripeSubscription);
 
         // Make sure to properly remove the subscription from the billable resource
-        $billable = $this->billableRepository->findBySubscription($subscription);
+        $billable = $this->billableRepository->findOneBySubscription($subscription);
         $billable->setSubscription(null);
 
         $this->objectManager->flush();
@@ -254,7 +254,7 @@ class SubscriptionService
         // If it relates to a "cancellation" event and that it has not been already cancelled server side,
         // we must properly detach the subscription from the billable resource
         if ($stripeEvent['type'] === 'customer.subscription.deleted' && !$subscription->isCancelled()) {
-            $billable = $this->billableRepository->findBySubscription($subscription);
+            $billable = $this->billableRepository->findOneBySubscription($subscription);
             $billable->setSubscription(null);
         }
 

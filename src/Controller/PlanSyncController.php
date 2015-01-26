@@ -16,23 +16,20 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\Repository;
+namespace ZfrCash\Controller;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use ZfrCash\Entity\BillableInterface;
-use ZfrCash\Entity\Subscription;
+use Zend\Mvc\Controller\AbstractActionController;
 
 /**
+ * Controller used to sync plans (using Stripe as the reference)
+ *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-interface BillableRepositoryInterface extends ObjectRepository
+class PlanSyncController extends AbstractActionController
 {
-    /**
-     * Get a billable object by its subscription
-     *
-     * @param  Subscription $subscription
-     * @return BillableInterface|null
-     */
-    public function findOneBySubscription(Subscription $subscription);
+    public function syncAction()
+    {
+
+    }
 }

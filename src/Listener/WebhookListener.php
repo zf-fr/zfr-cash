@@ -24,6 +24,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfrCash\Controller\WebhookListenerController;
 use ZfrCash\Event\WebhookEvent;
 use ZfrCash\Options\ModuleOptions;
+use ZfrCash\Service\CardService;
 use ZfrCash\Service\DiscountService;
 use ZfrCash\Service\InvoiceService;
 use ZfrCash\Service\PlanService;
@@ -81,11 +82,17 @@ final class WebhookListener extends AbstractListenerAggregate
      */
     public function dispatchWebhook(WebhookEvent $event)
     {
-        switch ($event->getEventName()) {
+        $stripeEvent = $event->getEvent();
+        $eventType   = $stripeEvent['type'];
+
+        switch ($eventType) {
             case 'customer.discount.created':
             case 'customer.discount.updated':
             case 'customer.discount.deleted':
                 return $this->handleDiscountEvent($event->getEvent());
+
+            case 'customer.card.updated':
+                return $this->handleCardEvent($event->getEvent());
 
             case 'customer.subscription.updated':
             case 'customer.subscription.deleted':
@@ -95,12 +102,6 @@ final class WebhookListener extends AbstractListenerAggregate
             case 'plan.updated':
             case 'plan.deleted':
                 return $this->handlePlanEvent($event->getEvent());
-
-            case 'invoice.created':
-            case 'invoice.updated':
-            case 'invoice.payment_succeeded':
-            case 'invoice.payment_failed':
-                return $this->handleInvoiceEvent($event->getEvent());
 
             default:
                 return ''; // Any other event is not handled by default
@@ -118,6 +119,21 @@ final class WebhookListener extends AbstractListenerAggregate
         /** @var DiscountService $discountService */
         $discountService = $this->serviceLocator->get(DiscountService::class);
         $discountService->syncFromStripeEvent($stripeEvent);
+
+        return 'Event has been properly processed';
+    }
+
+    /**
+     * Handle a card Stripe event
+     *
+     * @param  array $stripeEvent
+     * @return string
+     */
+    public function handleCardEvent(array $stripeEvent)
+    {
+        /** @var CardService $cardService */
+        $cardService = $this->serviceLocator->get(CardService::class);
+        $cardService->syncFromStripeEvent($stripeEvent);
 
         return 'Event has been properly processed';
     }
@@ -148,21 +164,6 @@ final class WebhookListener extends AbstractListenerAggregate
         /** @var PlanService $planService */
         $planService = $this->serviceLocator->get(PlanService::class);
         $planService->syncFromStripeEvent($stripeEvent);
-
-        return 'Event has been properly processed';
-    }
-
-    /**
-     * Handle an invoice Stripe event
-     *
-     * @param  array $stripeEvent
-     * @return string
-     */
-    public function handleInvoiceEvent(array $stripeEvent)
-    {
-        /** @var InvoiceService $invoiceService */
-        $invoiceService = $this->serviceLocator->get(InvoiceService::class);
-        $invoiceService->syncFromStripeEvent($stripeEvent);
 
         return 'Event has been properly processed';
     }
