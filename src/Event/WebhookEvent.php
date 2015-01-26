@@ -30,12 +30,7 @@ class WebhookEvent extends Event
     /**
      * Constant(s) name(s) for events
      */
-    const WEBHOOK_RECEIVED = 'webhook.received';
-
-    /**
-     * @var string
-     */
-    private $eventName;
+    const WEBHOOK_RECEIVED = 'stripe_webhook.received';
 
     /**
      * @var array
@@ -43,21 +38,11 @@ class WebhookEvent extends Event
     private $event;
 
     /**
-     * @param string $eventName
      * @param array   $event
      */
-    public function __construct($eventName, array $event)
+    public function __construct(array $event)
     {
-        $this->eventName = (string) $eventName;
-        $this->event     = $event;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEventName()
-    {
-        return $this->eventName;
+        $this->event = $event;
     }
 
     /**

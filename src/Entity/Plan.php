@@ -25,10 +25,8 @@ use ZfrCash\Exception\InvalidArgumentException;
 /**
  * Wrapper around a Stripe plan
  *
- * This entity encapsulates most Stripe attributes, but adds its own set of properties. For instance, it
- * supports a "features" array that you can display in your pricing pages, as well as a searchable "limits"
- * collection that you can use it if you need to attribute a specific billable resource to a plan according
- * to some pre-defined limits (like a maximum number of private repositories)
+ * You can use the metadata attributes (that are sent to Stripe too) in order to encapsulate limits logic, or
+ * specific features to a plan
  *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
@@ -86,14 +84,9 @@ class Plan
     protected $createdAt;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    protected $features = [];
-
-    /**
-     * @var array|\Doctrine\Common\Collections\Collection
-     */
-    protected $limits;
+    protected $metadata;
 
     /**
      * @var bool
@@ -105,7 +98,7 @@ class Plan
      */
     public function __construct()
     {
-        $this->limits = new ArrayCollection();
+        $this->metadata = new ArrayCollection();
     }
 
     /**
@@ -309,7 +302,7 @@ class Plan
         $this->limits->clear();
 
         foreach ($limits as $key => $value) {
-            $limit = new PlanLimit($this);
+            $limit = new PlanMetadata($this);
             $limit->setKey($key);
             $limit->setValue($value);
 

@@ -104,7 +104,7 @@ class WebhookListenerController extends AbstractActionController
             }
         }
 
-        $event              = new WebhookEvent($stripeEvent['type'], $stripeEvent);
+        $event              = new WebhookEvent($stripeEvent);
         $responseCollection = $this->getEventManager()->trigger(WebhookEvent::WEBHOOK_RECEIVED, $event);
 
         $message = '';

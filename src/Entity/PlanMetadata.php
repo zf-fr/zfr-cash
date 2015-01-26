@@ -19,43 +19,68 @@
 namespace ZfrCash\Entity;
 
 /**
- * Interface for a Stripe customer where VAT is taken into account
- *
- * This interface extends the CustomerInterface and adds the ability to automatically charge VAT for
- * european countries, according to new 2015 regulation rules
- *
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-interface VatCustomerInterface extends CustomerInterface
+class PlanMetadata
 {
     /**
-     * Set the VAT number (or null to remove it)
-     *
-     * @param  string|null $vatNumber
-     * @return string|null
+     * @var int
      */
-    public function setVatNumber($vatNumber = null);
+    protected $id;
 
     /**
-     * Get the VAT number
-     *
-     * @return string|null
+     * @var Plan
      */
-    public function getVatNumber();
+    protected $plan;
 
     /**
-     * Set the VAT country (2 letters ISO-code, or null to remove it)
-     *
-     * @param  string|null $vatCountry
-     * @return string|null
+     * @var string
      */
-    public function setVatCountry($vatCountry);
+    protected $key;
 
     /**
-     * Get the VAT country (2 letters ISO-code)
-     *
-     * @return string|null
+     * @var string
      */
-    public function getVatCountry();
+    protected $value;
+
+    /**
+     * @param Plan $plan
+     */
+    public function __construct(Plan $plan)
+    {
+        $this->plan = $plan;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->key = (string) $key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setValue($value)
+    {
+        $this->value = (string) $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 }

@@ -33,6 +33,9 @@ use ZfrStripe\Client\StripeClient;
 /**
  * Listener that synchronizes Stripe data with our own database data
  *
+ * This listener only listens to a small amount of meaningful events, but you are encouraged to listen to other
+ * events (like "invoice.payment_successful" if you need to save an invoice)
+ *
  * @author Michaël Gallego <mic.gallego@gmail.com>
  */
 final class WebhookListener extends AbstractListenerAggregate

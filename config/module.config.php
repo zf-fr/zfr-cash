@@ -54,12 +54,6 @@ return [
         ]
     ],
 
-    'validators' => [
-        'invokables' => [
-            'vies' => ViesValidator::class
-        ]
-    ],
-
     'controllers' => [
         'factories' => [
             WebhookListenerController::class => WebhookListenerControllerFactory::class

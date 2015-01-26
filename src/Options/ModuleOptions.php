@@ -42,16 +42,6 @@ class ModuleOptions extends AbstractOptions
     protected $registerListeners = true;
 
     /**
-     * @var string
-     */
-    protected $vatNumber;
-
-    /**
-     * @var string
-     */
-    protected $vatCountry;
-
-    /**
      * @param string $objectManager
      */
     public function setObjectManager($objectManager)
@@ -97,37 +87,5 @@ class ModuleOptions extends AbstractOptions
     public function getRegisterListeners()
     {
         return $this->registerListeners;
-    }
-
-    /**
-     * @param string $vatNumber
-     */
-    public function setVatNumber($vatNumber)
-    {
-        $this->vatNumber = (string) $vatNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVatNumber()
-    {
-        return $this->vatNumber;
-    }
-
-    /**
-     * @param string $vatCountry
-     */
-    public function setVatCountry($vatCountry)
-    {
-        $this->vatCountry = (string) $vatCountry;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVatCountry()
-    {
-        return $this->vatCountry;
     }
 }

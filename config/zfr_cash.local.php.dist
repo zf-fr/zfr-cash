@@ -39,16 +39,6 @@ return [
          *
          * We currently register several listeners to keep the system in sync
          */
-        // 'register_listeners' => true,
-
-        /**
-         * Your company's VAT country code (2-letters ISO code) - only needed if you want to use VAT
-         */
-        // 'vat_country' => '',
-
-        /**
-         * Your company's VAT number - only needed if you want to use VAT
-         */
-        // 'vat_number' => ''
+        // 'register_listeners' => true
     ]
 ];
