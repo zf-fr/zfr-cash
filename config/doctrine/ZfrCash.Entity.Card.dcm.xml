@@ -11,6 +11,9 @@
         </id>
 
         <field name="stripeId" column="stripe_id" type="string" length="255" unique="true" />
+        <one-to-one field="owner" target-entity="ZfrCash\Entity\CustomerInterface" mapped-by="card">
+            <join-column on-delete="CASCADE" />
+        </one-to-one>
         <field name="brand" type="string" length="20" />
         <field name="expMonth" column="exp_month" type="smallint" />
         <field name="expYear" column="exp_year" type="smallint" />

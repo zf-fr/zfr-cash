@@ -38,7 +38,9 @@ class CardService
      */
     private $objectManager;
 
-    /** @var ObjectRepository */
+    /**
+     * @var ObjectRepository
+     */
     private $cardRepository;
 
     /**
@@ -47,11 +49,15 @@ class CardService
     private $stripeClient;
 
     /**
-     * @param ObjectManager $objectManager
-     * @param StripeClient  $stripeClient
+     * @param ObjectManager    $objectManager
+     * @param ObjectRepository $cardRepository
+     * @param StripeClient     $stripeClient
      */
-    public function __construct(ObjectManager $objectManager, StripeClient $stripeClient)
-    {
+    public function __construct(
+        ObjectManager $objectManager,
+        ObjectRepository $cardRepository,
+        StripeClient $stripeClient
+    ) {
         $this->objectManager = $objectManager;
         $this->stripeClient  = $stripeClient;
     }
@@ -83,7 +89,7 @@ class CardService
 
         // If the customer had a previous card, we must remove it before saving the new one
         if (null !== $customer->getCard()) {
-            $this->objectManager->remove($customer->getCard());
+            $this->remove($customer->getCard());
         }
 
         $card = new Card();
@@ -105,6 +111,11 @@ class CardService
      */
     public function remove(Card $card)
     {
+        $this->stripeClient->deleteCard([
+            'id'       => $card->getStripeId(),
+            'customer' => $card->getOwner()->getStripeId(),
+        ]);
+
         $this->objectManager->remove($card);
         $this->objectManager->flush();
     }

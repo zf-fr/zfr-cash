@@ -21,11 +21,9 @@ use ZfrCash\Controller\WebhookListenerController;
 use ZfrCash\Factory\CardServiceFactory;
 use ZfrCash\Factory\CustomerServiceFactory;
 use ZfrCash\Factory\DiscountServiceFactory;
-use ZfrCash\Factory\InvoiceServiceFactory;
 use ZfrCash\Factory\ModuleOptionsFactory;
 use ZfrCash\Factory\PlanServiceFactory;
 use ZfrCash\Factory\SubscriptionServiceFactory;
-use ZfrCash\Factory\VatServiceFactory;
 use ZfrCash\Factory\WebhookListenerControllerFactory;
 use ZfrCash\Factory\WebhookListenerFactory;
 use ZfrCash\Listener\WebhookListener;
@@ -33,11 +31,8 @@ use ZfrCash\Options\ModuleOptions;
 use ZfrCash\Service\CardService;
 use ZfrCash\Service\CustomerService;
 use ZfrCash\Service\DiscountService;
-use ZfrCash\Service\InvoiceService;
 use ZfrCash\Service\PlanService;
 use ZfrCash\Service\SubscriptionService;
-use ZfrCash\Service\VatService;
-use ZfrCash\Validator\ViesValidator;
 
 return [
     'service_manager' => [
@@ -45,11 +40,9 @@ return [
             CardService::class         => CardServiceFactory::class,
             CustomerService::class     => CustomerServiceFactory::class,
             DiscountService::class     => DiscountServiceFactory::class,
-            InvoiceService::class      => InvoiceServiceFactory::class,
             ModuleOptions::class       => ModuleOptionsFactory::class,
             PlanService::class         => PlanServiceFactory::class,
             SubscriptionService::class => SubscriptionServiceFactory::class,
-            VatService::class          => VatServiceFactory::class,
             WebhookListener::class     => WebhookListenerFactory::class
         ]
     ],
