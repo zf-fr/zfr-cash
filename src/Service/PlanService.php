@@ -77,16 +77,23 @@ class PlanService
      */
     public function update(Plan $plan)
     {
-        $metadata = null;
+        // The first API call to Stripe is used to reset the Stripe metadata
+        $this->stripeClient->updatePlan([
+            'name'     => $plan->getName(),
+            'metadata' => []
+        ]);
+
+        $metadata = [];
 
         foreach ($plan->getMetadata() as $metadatum) {
             $metadata[$metadatum->getKey()] = $metadatum->getValue();
         }
 
-        $this->stripeClient->updatePlan(array_filter([
-            'name'     => $plan->getName(),
-            'metadata' => $metadata
-        ]));
+        if (!empty($metadata)) {
+            $this->stripeClient->updatePlan([
+                'metadata' => $metadata
+            ]);
+        }
 
         $this->objectManager->flush($plan);
 
@@ -158,11 +165,12 @@ class PlanService
      * Get a plan by its Stripe ID
      *
      * @param  string $stripeId
+     * @param  bool   $active
      * @return Plan|null
      */
-    public function getByStripeId($stripeId)
+    public function getByStripeId($stripeId, $active = true)
     {
-        return $this->planRepository->findOneBy(['stripeId' => (string) $stripeId]);
+        return $this->planRepository->findOneBy(['stripeId' => (string) $stripeId, 'active' => (bool) $active]);
     }
 
     /**

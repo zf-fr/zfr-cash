@@ -86,6 +86,7 @@ class SubscriptionService
      *      - quantity: set a quantity for the plan
      *      - trial_end: a DateTime that represents that allows to manually set an trial date
      *      - application_fee_percent: if you are creating subscription on behalf of other through Stripe Connect
+     *      - billing_cycle_anchor: a DateTime to define when the subscription must start its recurring period
      *      - metadata: any pair of metadata
      *
      * @param  CustomerInterface $customer
@@ -103,6 +104,7 @@ class SubscriptionService
             'tax_percent'             => isset($options['tax_percent']) ? $options['tax_percent'] : null,
             'trial_end'               => isset($options['trial_end']) ? $options['trial_end']->getTimestamp() : null,
             'application_fee_percent' => isset($options['application_fee_percent']) ? $options['application_fee_percent'] : null,
+            'billing_cycle_anchor'    => isset($options['billing_cycle_anchor']) ? $options['billing_cycle_anchor']->getTimestamp() : null,
             'metadata'                => isset($options['metadata']) ? $options['metadata'] : null
         ]));
 

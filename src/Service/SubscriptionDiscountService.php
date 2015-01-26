@@ -81,9 +81,9 @@ class SubscriptionDiscountService
      */
     public function createForSubscription(Subscription $subscription, $coupon)
     {
-        // First, remove the previous discount, if any
+        // If the subscription already have a coupon, we update it instead
         if ($discount = $subscription->getDiscount()) {
-            $this->remove($discount);
+            return $this->changeCoupon($discount, $coupon);
         }
 
         $stripeSubscription = $this->stripeClient->updateSubscription([
@@ -102,6 +102,27 @@ class SubscriptionDiscountService
         $this->objectManager->flush();
 
         return $discount;
+    }
+
+    /**
+     * Change the coupon for a given subscription discount
+     *
+     * @param  SubscriptionDiscount $subscriptionDiscount
+     * @param  string               $coupon
+     * @return SubscriptionDiscount
+     */
+    public function changeCoupon(SubscriptionDiscount $subscriptionDiscount, $coupon)
+    {
+        $stripeSubscription = $this->stripeClient->updateSubscription([
+            'id'     => $subscriptionDiscount->getCustomer()->getStripeId(),
+            'coupon' => $coupon
+        ]);
+
+        $this->populateDiscountFromStripeResource($subscriptionDiscount, $stripeSubscription['discount']);
+
+        $this->objectManager->flush();
+
+        return $subscriptionDiscount;
     }
 
     /**

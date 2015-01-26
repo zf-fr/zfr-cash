@@ -81,21 +81,21 @@ class CustomerService
      * You can pass an optional card token (created using Stripe.js), an optional coupon and some additional
      * options. Supported options are:
      *
+     *    - card: the Card token (or an array of card properties)
+     *    - coupon: an optional coupon
      *    - email: set as the "email" field in Stripe
      *    - description: set as the "description" field in Stripe
      *    - metadata: set as the "metadata" field in Stripe
      *
      * @param  CustomerInterface $customer
-     * @param  string|null       $cardToken
-     * @param  string|null       $coupon
      * @param  array             $options
      * @return CustomerInterface
      */
-    public function create(CustomerInterface $customer, $cardToken = null, $coupon = null, array $options = [])
+    public function create(CustomerInterface $customer, array $options = [])
     {
         $stripeCustomer = $this->stripeClient->createCustomer(array_filter([
-            'card'        => $cardToken,
-            'coupon'      => $coupon,
+            'card'        => isset($options['card']) ? $options['card'] : null,
+            'coupon'      => isset($options['coupon']) ? $options['coupon'] : null,
             'description' => isset($options['description']) ? $options['description'] : null,
             'email'       => isset($options['email']) ? $options['email'] : null,
             'metadata'    => isset($options['metadata']) ? $options['metadata'] : null

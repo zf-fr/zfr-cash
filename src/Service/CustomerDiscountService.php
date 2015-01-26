@@ -82,9 +82,9 @@ class CustomerDiscountService
      */
     public function createForCustomer(CustomerInterface $customer, $coupon)
     {
-        // First, remove the previous discount, if any
+        // If the customer already have a coupon, we update it instead
         if ($discount = $customer->getDiscount()) {
-            $this->remove($discount);
+            return $this->changeCoupon($discount, $coupon);
         }
 
         $stripeCustomer = $this->stripeClient->updateCustomer([
@@ -101,6 +101,27 @@ class CustomerDiscountService
         $this->objectManager->flush();
 
         return $discount;
+    }
+
+    /**
+     * Change the coupon for a given customer discount
+     *
+     * @param  CustomerDiscount $customerDiscount
+     * @param  string           $coupon
+     * @return CustomerDiscount
+     */
+    public function changeCoupon(CustomerDiscount $customerDiscount, $coupon)
+    {
+        $stripeCustomer = $this->stripeClient->updateCustomer([
+            'id'     => $customerDiscount->getCustomer()->getStripeId(),
+            'coupon' => $coupon
+        ]);
+
+        $this->populateDiscountFromStripeResource($customerDiscount, $stripeCustomer['discount']);
+
+        $this->objectManager->flush();
+
+        return $customerDiscount;
     }
 
     /**

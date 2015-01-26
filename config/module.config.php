@@ -17,7 +17,6 @@
  */
 
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
-use ZfrCash\Controller\PlanSyncController;
 use ZfrCash\Controller\WebhookListenerController;
 use ZfrCash\Factory\CardServiceFactory;
 use ZfrCash\Factory\CustomerDiscountServiceFactory;
@@ -51,9 +50,43 @@ return [
         ]
     ],
 
+    'router' => [
+        'routes' => [
+            'stripe-webhook' => [
+                'type'    => 'Literal',
+                'options' => [
+                    'route'    => '/stripe',
+                    'defaults' => [
+                        'controller' => WebhookListenerController::class
+                    ]
+                ],
+                'child_routes' => [
+                    'test-listener' => [
+                        'type'    => 'Literal',
+                        'options' => [
+                            'route'    => '/test-listener',
+                            'defaults' => [
+                                'action' => 'handleTestEvent'
+                            ]
+                        ]
+                    ],
+
+                    'live-listener' => [
+                        'type'    => 'Literal',
+                        'options' => [
+                            'route'    => '/live-listener',
+                            'defaults' => [
+                                'action' => 'handleLiveEvent'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+
     'controllers' => [
         'factories' => [
-            PlanSyncController::class        => PlanSyncControllerFactory::class,
             WebhookListenerController::class => WebhookListenerControllerFactory::class
         ]
     ],
