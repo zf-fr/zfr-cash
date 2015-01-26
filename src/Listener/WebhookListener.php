@@ -29,7 +29,6 @@ use ZfrCash\Service\DiscountService;
 use ZfrCash\Service\InvoiceService;
 use ZfrCash\Service\PlanService;
 use ZfrCash\Service\SubscriptionService;
-use ZfrStripe\Client\StripeClient;
 
 /**
  * Listener that synchronizes Stripe data with our own database data

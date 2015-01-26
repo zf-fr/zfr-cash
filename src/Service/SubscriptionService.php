@@ -24,8 +24,8 @@ use ZfrCash\Entity\BillableInterface;
 use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\Entity\Plan;
 use ZfrCash\Entity\Subscription;
-use ZfrCash\Repository\BillableRepositoryInterface;
 use ZfrCash\Populator\SubscriptionPopulatorTrait;
+use ZfrCash\Repository\BillableRepositoryInterface;
 use ZfrStripe\Client\StripeClient;
 use ZfrStripe\Exception\NotFoundException as StripeNotFoundException;
 

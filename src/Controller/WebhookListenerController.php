@@ -21,7 +21,6 @@ namespace ZfrCash\Controller;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\Controller\AbstractActionController;
 use ZfrCash\Event\WebhookEvent;
-use ZfrCash\Exception\RuntimeException;
 use ZfrCash\Options\ModuleOptions;
 use ZfrStripe\Client\StripeClient;
 use ZfrStripe\Exception\NotFoundException as StripeNotFoundException;

@@ -22,9 +22,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use ZfrCash\Entity\Card;
 use ZfrCash\Entity\CustomerDiscount;
 use ZfrCash\Entity\CustomerInterface;
-use ZfrCash\Repository\CustomerRepositoryInterface;
 use ZfrCash\Populator\CardPopulatorTrait;
 use ZfrCash\Populator\DiscountPopulatorTrait;
+use ZfrCash\Repository\CustomerRepositoryInterface;
 use ZfrStripe\Client\StripeClient;
 
 /**

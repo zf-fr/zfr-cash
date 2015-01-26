@@ -20,8 +20,8 @@ namespace ZfrCash\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\Entity\CustomerDiscount;
+use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\Options\ModuleOptions;
 use ZfrCash\Service\CustomerDiscountService;
 use ZfrStripe\Client\StripeClient;
