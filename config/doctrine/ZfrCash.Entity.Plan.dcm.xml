@@ -21,7 +21,6 @@
         <field name="interval" column="`interval`" type="string" length="5" />
         <field name="intervalCount" column="interval_count" type="smallint" />
         <field name="trialPeriodDays" column="trial_period_days" type="smallint" nullable="true" />
-        <field name="features" type="json_array" />
         <one-to-many field="metadata" target-entity="ZfrCash\Entity\PlanMetadata" fetch="EAGER" mapped-by="plan">
             <cascade>
                 <cascade-persist />

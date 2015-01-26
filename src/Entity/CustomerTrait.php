@@ -41,15 +41,13 @@ trait CustomerTrait
      * @var Card|null
      *
      * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Card", inversedBy="owner")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $card;
 
     /**
      * @var Discount|null
      *
-     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Discount")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\OneToMany(targetEntity="ZfrCash\Entity\Discount", inversedBy="customer")
      */
     protected $discount;
 

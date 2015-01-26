@@ -10,6 +10,8 @@
             <generator strategy="AUTO" />
         </id>
 
+        <one-to-many field="customer" target-entity="ZfrCash\Entity\CustomerInterface" mapped-by="discount" />
+        <one-to-one field="subscription" target-entity="ZfrCash\Entity\Subscription" mapped-by="discount" />
         <embedded name="coupon" class="ZfrCash\Entity\Coupon" />
         <field name="startedAt" column="started_at" type="datetime" />
         <field name="endAt" column="end_at" type="datetime" nullable="true" />

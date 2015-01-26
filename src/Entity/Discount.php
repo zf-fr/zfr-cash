@@ -36,6 +36,16 @@ class Discount
     protected $id;
 
     /**
+     * @var CustomerInterface
+     */
+    protected $customer;
+
+    /**
+     * @var Subscription|null
+     */
+    protected $subscription;
+
+    /**
      * @var Coupon
      */
     protected $coupon;
@@ -56,6 +66,43 @@ class Discount
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param CustomerInterface $customer
+     */
+    public function setCustomer($customer)
+    {
+        $customer->setDiscount($this);
+        $this->customer = $customer;
+    }
+
+    /**
+     * @return CustomerInterface
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @param Subscription|null $subscription
+     */
+    public function setSubscription($subscription = null)
+    {
+        if (null === $subscription) {
+            $subscription->setDiscount($this);
+        }
+
+        $this->subscription = $subscription;
+    }
+
+    /**
+     * @return Subscription|null
+     */
+    public function getSubscription()
+    {
+        return $this->subscription;
     }
 
     /**
