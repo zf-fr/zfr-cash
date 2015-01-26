@@ -10,16 +10,19 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="stripeId" column="stripe_id" type="string" length="255" unique="true" />
+        <field name="stripeId" column="stripe_id" type="string" length="255" unique="true">
+            <options>
+                <option name="collation">utf8_bin</option>
+            </options>
+        </field>
+
         <many-to-one field="plan" target-entity="ZfrCash\Entity\Plan" />
 
         <many-to-one field="payer" target-entity="ZfrCash\Entity\CustomerInterface">
             <join-column on-delete="CASCADE" />
         </many-to-one>
 
-        <one-to-one field="discount" target-entity="ZfrCash\Entity\Discount" >
-            <join-column on-delete="CASCADE" />
-        </one-to-one>
+        <one-to-one field="discount" target-entity="ZfrCash\Entity\SubscriptionDiscount" />
 
         <field name="quantity" type="integer" />
         <field name="taxPercent" column="tax_percent" type="decimal" precision="5" scale="2" />

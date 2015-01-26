@@ -10,7 +10,12 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="stripeId" column="stripe_id" type="string" length="255" unique="true" />
+        <field name="stripeId" column="stripe_id" type="string" length="255" unique="true">
+            <options>
+                <option name="collation">utf8_bin</option>
+            </options>
+        </field>
+
         <one-to-one field="owner" target-entity="ZfrCash\Entity\CustomerInterface" mapped-by="card" />
         <field name="brand" type="string" length="20" />
         <field name="expMonth" column="exp_month" type="smallint" />
