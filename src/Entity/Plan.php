@@ -248,74 +248,40 @@ class Plan
     }
 
     /**
-     * @param  string $feature
-     * @return bool
+     * @param PlanMetadata[] $metadata
      */
-    public function hasFeature($feature)
+    public function setMetadata(array $metadata)
     {
-        return in_array($feature, $this->features, true);
-    }
+        $this->metadata->clear();
 
-    /**
-     * @param array $features
-     */
-    public function setFeatures(array $features)
-    {
-        $this->features = $features;
-    }
-
-    /**
-     * @param  string $feature
-     * @return void
-     */
-    public function addFeature($feature)
-    {
-        $this->features[] = $feature;
-    }
-
-    /**
-     * @param  string $feature
-     * @return void
-     */
-    public function removeFeature($feature)
-    {
-        $key = array_search($feature, $this->features, true);
-
-        if ($key !== false) {
-            unset($this->features[$key]);
+        foreach ($metadata as $metadatum) {
+            $metadatum->setPlan($this);
+            $this->metadata->add($metadatum);
         }
     }
 
     /**
-     * @return array
+     * @param PlanMetadata $metadatum
      */
-    public function getFeatures()
+    public function addMetadata(PlanMetadata $metadatum)
     {
-        return $this->features;
+        $this->metadata->add($metadatum);
     }
 
     /**
-     * @param array $limits
+     * @param PlanMetadata $metadatum
      */
-    public function setLimits(array $limits = [])
+    public function removeMetadata(PlanMetadata $metadatum)
     {
-        $this->limits->clear();
-
-        foreach ($limits as $key => $value) {
-            $limit = new PlanMetadata($this);
-            $limit->setKey($key);
-            $limit->setValue($value);
-
-            $this->limits->add($limit);
-        }
+        $this->metadata->removeElement($metadatum);
     }
 
     /**
-     * @return array
+     * @return PlanMetadata[]
      */
-    public function getLimits()
+    public function getMetadata()
     {
-        return $this->limits->toArray();
+        return $this->metadata->toArray();
     }
 
     /**

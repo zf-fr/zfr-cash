@@ -16,7 +16,7 @@
  * and is licensed under the MIT license.
  */
 
-namespace CardService;
+namespace ZfrCash\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;

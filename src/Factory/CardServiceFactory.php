@@ -20,6 +20,7 @@ namespace ZfrCash\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfrCash\Entity\Card;
 use ZfrCash\Options\ModuleOptions;
 use ZfrCash\Service\CardService;
 use ZfrStripe\Client\StripeClient;
@@ -41,9 +42,12 @@ class CardServiceFactory implements FactoryInterface
         /** @var \Doctrine\Common\Persistence\ObjectManager $objectManager */
         $objectManager = $serviceLocator->get($moduleOptions->getObjectManager());
 
+        /** @var \Doctrine\Common\Persistence\ObjectRepository $cardRepository */
+        $cardRepository = $objectManager->getRepository(Card::class);
+
         /** @var StripeClient $stripeClient */
         $stripeClient = $serviceLocator->get(StripeClient::class);
 
-        return new CardService($objectManager, $stripeClient);
+        return new CardService($objectManager, $cardRepository, $stripeClient);
     }
 }

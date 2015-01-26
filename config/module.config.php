@@ -19,31 +19,34 @@
 use Doctrine\ORM\Mapping\Driver\XmlDriver;
 use ZfrCash\Controller\WebhookListenerController;
 use ZfrCash\Factory\CardServiceFactory;
+use ZfrCash\Factory\CustomerDiscountServiceFactory;
 use ZfrCash\Factory\CustomerServiceFactory;
-use ZfrCash\Factory\DiscountServiceFactory;
 use ZfrCash\Factory\ModuleOptionsFactory;
 use ZfrCash\Factory\PlanServiceFactory;
+use ZfrCash\Factory\SubscriptionDiscountServiceFactory;
 use ZfrCash\Factory\SubscriptionServiceFactory;
 use ZfrCash\Factory\WebhookListenerControllerFactory;
 use ZfrCash\Factory\WebhookListenerFactory;
 use ZfrCash\Listener\WebhookListener;
 use ZfrCash\Options\ModuleOptions;
 use ZfrCash\Service\CardService;
+use ZfrCash\Service\CustomerDiscountService;
 use ZfrCash\Service\CustomerService;
-use ZfrCash\Service\DiscountService;
 use ZfrCash\Service\PlanService;
+use ZfrCash\Service\SubscriptionDiscountService;
 use ZfrCash\Service\SubscriptionService;
 
 return [
     'service_manager' => [
         'factories' => [
-            CardService::class         => CardServiceFactory::class,
-            CustomerService::class     => CustomerServiceFactory::class,
-            DiscountService::class     => DiscountServiceFactory::class,
-            ModuleOptions::class       => ModuleOptionsFactory::class,
-            PlanService::class         => PlanServiceFactory::class,
-            SubscriptionService::class => SubscriptionServiceFactory::class,
-            WebhookListener::class     => WebhookListenerFactory::class
+            CardService::class                 => CardServiceFactory::class,
+            CustomerDiscountService::class     => CustomerDiscountServiceFactory::class,
+            CustomerService::class             => CustomerServiceFactory::class,
+            ModuleOptions::class               => ModuleOptionsFactory::class,
+            PlanService::class                 => PlanServiceFactory::class,
+            SubscriptionDiscountService::class => SubscriptionDiscountServiceFactory::class,
+            SubscriptionService::class         => SubscriptionServiceFactory::class,
+            WebhookListener::class             => WebhookListenerFactory::class
         ]
     ],
 

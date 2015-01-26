@@ -20,18 +20,17 @@ namespace ZfrCash\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfrCash\Entity\BillableInterface;
-use ZfrCash\Entity\Subscription;
+use ZfrCash\Entity\CustomerInterface;
+use ZfrCash\Entity\CustomerDiscount;
 use ZfrCash\Options\ModuleOptions;
-use ZfrCash\Service\SubscriptionService;
-use ZfrCash\Service\VatService;
+use ZfrCash\Service\CustomerDiscountService;
 use ZfrStripe\Client\StripeClient;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class SubscriptionServiceFactory implements FactoryInterface
+class CustomerDiscountServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
@@ -44,15 +43,15 @@ class SubscriptionServiceFactory implements FactoryInterface
         /** @var \Doctrine\Common\Persistence\ObjectManager $objectManager */
         $objectManager = $serviceLocator->get($moduleOptions->getObjectManager());
 
-        /** @var \Doctrine\Common\Persistence\ObjectRepository $subscriptionRepository */
-        $subscriptionRepository = $objectManager->getRepository(Subscription::class);
+        /** @var \Doctrine\Common\Persistence\ObjectRepository $customerDiscountRepository */
+        $customerDiscountRepository = $objectManager->getRepository(CustomerDiscount::class);
 
-        /** @var \ZfrCash\Repository\BillableRepositoryInterface $billableRepository */
-        $billableRepository = $objectManager->getRepository(BillableInterface::class);
+        /** @var \ZfrCash\Repository\CustomerRepositoryInterface $customerRepository */
+        $customerRepository = $objectManager->getRepository(CustomerInterface::class);
 
         /** @var StripeClient $stripeClient */
         $stripeClient = $serviceLocator->get(StripeClient::class);
 
-        return new SubscriptionService($objectManager, $subscriptionRepository, $billableRepository, $stripeClient);
+        return new CustomerDiscountService($objectManager, $customerDiscountRepository, $customerRepository, $stripeClient);
     }
 }

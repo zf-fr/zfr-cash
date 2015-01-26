@@ -20,6 +20,7 @@ namespace ZfrCash\Populator;
 
 use DateTime;
 use ZfrCash\Entity\Plan;
+use ZfrCash\Entity\PlanMetadata;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
@@ -41,5 +42,30 @@ trait PlanPopulatorTrait
         $plan->setIntervalCount($stripePlan['interval_count']);
         $plan->setTrialPeriodDays($stripePlan['trial_period_days']);
         $plan->setCreatedAt((new DateTime())->setTimestamp($stripePlan['created']));
+
+        $metadata       = $plan->getMetadata();
+        $stripeMetadata = $stripePlan['metadata'];
+
+        foreach ($metadata as $metadatum) {
+            $key = $metadatum->getKey();
+
+            if (isset($stripeMetadata[$key])) {
+                $metadatum->setValue($stripeMetadata[$key]);
+                unset($stripeMetadata[$key]);
+            } else {
+                // Not present on Stripe, so we remove it from database
+                $plan->removeMetadata($metadatum);
+            }
+        }
+
+        // For missing metadata, we need to add them
+        foreach ($stripeMetadata as $key => $value) {
+            $metadatum = new PlanMetadata();
+            $metadatum->setPlan($plan);
+            $metadatum->setKey($key);
+            $metadatum->setValue($value);
+
+            $plan->addMetadata($metadatum);
+        }
     }
 }

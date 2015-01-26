@@ -20,17 +20,17 @@ namespace ZfrCash\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\Entity\Subscription;
+use ZfrCash\Entity\SubscriptionDiscount;
 use ZfrCash\Options\ModuleOptions;
-use ZfrCash\Service\DiscountService;
+use ZfrCash\Service\SubscriptionDiscountService;
 use ZfrStripe\Client\StripeClient;
 
 /**
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class DiscountServiceFactory implements FactoryInterface
+class SubscriptionDiscountServiceFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
@@ -43,15 +43,15 @@ class DiscountServiceFactory implements FactoryInterface
         /** @var \Doctrine\Common\Persistence\ObjectManager $objectManager */
         $objectManager = $serviceLocator->get($moduleOptions->getObjectManager());
 
+        /** @var \Doctrine\Common\Persistence\ObjectRepository $subscriptionDiscountRepository */
+        $subscriptionDiscountRepository = $objectManager->getRepository(SubscriptionDiscount::class);
+
         /** @var \Doctrine\Common\Persistence\ObjectRepository $subscriptionRepository */
         $subscriptionRepository = $objectManager->getRepository(Subscription::class);
-
-        /** @var \ZfrCash\Repository\CustomerRepositoryInterface $customerRepository */
-        $customerRepository = $objectManager->getRepository(CustomerInterface::class);
 
         /** @var StripeClient $stripeClient */
         $stripeClient = $serviceLocator->get(StripeClient::class);
 
-        return new DiscountService($objectManager, $subscriptionRepository, $customerRepository, $stripeClient);
+        return new SubscriptionDiscountService($objectManager, $subscriptionDiscountRepository, $subscriptionRepository, $stripeClient);
     }
 }

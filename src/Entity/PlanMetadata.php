@@ -45,9 +45,25 @@ class PlanMetadata
     protected $value;
 
     /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Plan
+     */
+    public function getPlan()
+    {
+        return $this->plan;
+    }
+
+    /**
      * @param Plan $plan
      */
-    public function __construct(Plan $plan)
+    public function setPlan(Plan $plan)
     {
         $this->plan = $plan;
     }
