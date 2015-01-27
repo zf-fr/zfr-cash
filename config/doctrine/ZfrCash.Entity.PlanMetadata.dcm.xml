@@ -17,7 +17,7 @@
         <many-to-one field="plan" target-entity="ZfrCash\Entity\Plan" inversed-by="metadata">
             <join-column on-delete="CASCADE" />
         </many-to-one>
-        <field name="key" column="`interval`" type="string" />
+        <field name="key" column="`key`" type="string" />
         <field name="value" column="`value`" type="string" />
     </entity>
 </doctrine-mapping>

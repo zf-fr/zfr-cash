@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0-beta.3
+
+* Fix mapping
+
 ## 1.0.0-beta.2
 
 * Add a validator for VIES european codes
