@@ -1,6 +1,6 @@
 # ZfrCash
 
-[![Master branch build status](https://secure.travis-ci.org/doctrine/DoctrineORMModule.png?branch=master)](http://travis-ci.org/doctrine/DoctrineORMModule)
+[![Build Status](https://travis-ci.org/zf-fr/zfr-cash.svg?branch=master)](https://travis-ci.org/zf-fr/zfr-cash)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zf-fr/zfr-cash/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/zf-fr/zfr-cash/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/zf-fr/zfr-cash/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/zf-fr/zfr-cash/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/zfr/zfr-cash/v/stable.svg)](https://packagist.org/packages/zfr/zfr-cash)
