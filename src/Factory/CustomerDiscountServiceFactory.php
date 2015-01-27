@@ -52,6 +52,11 @@ class CustomerDiscountServiceFactory implements FactoryInterface
         /** @var StripeClient $stripeClient */
         $stripeClient = $serviceLocator->get(StripeClient::class);
 
-        return new CustomerDiscountService($objectManager, $customerDiscountRepository, $customerRepository, $stripeClient);
+        return new CustomerDiscountService(
+            $objectManager,
+            $customerDiscountRepository,
+            $customerRepository,
+            $stripeClient
+        );
     }
 }
