@@ -16,40 +16,23 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\Event;
+namespace ZfrCashTest\Options;
 
-use Zend\EventManager\Event;
+use PHPUnit_Framework_TestCase;
+use ZfrCash\Options\ModuleOptions;
 
-/**
- * Event that contains data about a Stripe webhook event
- *
- * @author Michaël Gallego <mic.gallego@gmail.com>
- */
-class WebhookEvent extends Event
+class ModuleOptionsTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * Constant(s) name(s) for events
-     */
-    const WEBHOOK_RECEIVED = 'stripe_webhook.received';
-
-    /**
-     * @var array
-     */
-    private $event;
-
-    /**
-     * @param array   $event
-     */
-    public function __construct(array $event)
+    public function testOptions()
     {
-        $this->event = $event;
-    }
+        $options = new ModuleOptions([
+            'object_manager'     => 'my_object_manager',
+            'validate_webhooks'  => false,
+            'register_listeners' => false
+        ]);
 
-    /**
-     * @return array
-     */
-    public function getStripeEvent()
-    {
-        return $this->event;
+        $this->assertEquals('my_object_manager', $options->getObjectManager());
+        $this->assertFalse($options->getValidateWebhooks());
+        $this->assertFalse($options->getRegisterListeners());
     }
 }

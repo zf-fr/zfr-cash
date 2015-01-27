@@ -84,26 +84,26 @@ final class WebhookListener extends AbstractListenerAggregate
      */
     public function dispatchWebhook(WebhookEvent $event)
     {
-        $stripeEvent = $event->getEvent();
+        $stripeEvent = $event->getStripeEvent();
         $eventType   = $stripeEvent['type'];
 
         switch ($eventType) {
             case 'customer.discount.created':
             case 'customer.discount.updated':
             case 'customer.discount.deleted':
-                return $this->handleDiscountEvent($event->getEvent());
+                return $this->handleDiscountEvent($event->getStripeEvent());
 
             case 'customer.card.updated':
-                return $this->handleCardEvent($event->getEvent());
+                return $this->handleCardEvent($event->getStripeEvent());
 
             case 'customer.subscription.updated':
             case 'customer.subscription.deleted':
-                return $this->handleSubscriptionEvent($event->getEvent());
+                return $this->handleSubscriptionEvent($event->getStripeEvent());
 
             case 'plan.created':
             case 'plan.updated':
             case 'plan.deleted':
-                return $this->handlePlanEvent($event->getEvent());
+                return $this->handlePlanEvent($event->getStripeEvent());
 
             default:
                 return ''; // Any other event is not handled by default

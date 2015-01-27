@@ -71,9 +71,8 @@ class CardService
      */
     public function attachToCustomer(CustomerInterface $customer, $card)
     {
-        // First, remove the previous card, if any
-        if ($existingCard = $customer->getCard()) {
-            $this->remove($existingCard);
+        if ($previousCard = $customer->getCard()) {
+            $this->objectManager->remove($previousCard);
         }
 
         // This call always set the new card as the default one
@@ -100,17 +99,19 @@ class CardService
         $this->objectManager->persist($newCard);
         $this->objectManager->flush();
 
-        // The new card has been set, so we can safely delete the old one from Stripe
-        try {
-            $this->stripeClient->deleteCard([
-                'id'       => $existingCard->getStripeId(),
-                'customer' => $customer->getStripeId()
-            ]);
-        } catch (StripeNotFoundException $exception) {
-            // The card may have been removed manually from Stripe, but we still need to remove it from database
+        // The new card has been set, so we can safely delete the old one from Stripe if existing
+        if (null !== $previousCard) {
+            try {
+                $this->stripeClient->deleteCard([
+                    'id'       => $previousCard->getStripeId(),
+                    'customer' => $customer->getStripeId()
+                ]);
+            } catch (StripeNotFoundException $exception) {
+                // The card may have been removed manually from Stripe, but we still need to remove it from database
+            }
         }
 
-        return $card;
+        return $newCard;
     }
 
     /**

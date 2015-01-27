@@ -264,7 +264,7 @@ class CustomStripeListener extends AbstractListenerAggregate
 	 */
 	public function handleStripeEvent(WebhookEvent $event)
 	{
-		$stripeEvent = $event->getEvent(); // This is the full Stripe event
+		$stripeEvent = $event->getStripeEvent(); // This is the full Stripe event
 		
 		switch ($stripeEvent['type']) {
 			case 'invoice.payment_failed':

@@ -16,40 +16,41 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\Event;
+namespace ZfrCashTest\Entity;
 
-use Zend\EventManager\Event;
+use PHPUnit_Framework_TestCase;
+use ZfrCash\Entity\Card;
 
-/**
- * Event that contains data about a Stripe webhook event
- *
- * @author Michaël Gallego <mic.gallego@gmail.com>
- */
-class WebhookEvent extends Event
+class CardTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * Constant(s) name(s) for events
-     */
-    const WEBHOOK_RECEIVED = 'stripe_webhook.received';
-
-    /**
-     * @var array
-     */
-    private $event;
-
-    /**
-     * @param array   $event
-     */
-    public function __construct(array $event)
-    {
-        $this->event = $event;
-    }
-
     /**
      * @return array
      */
-    public function getStripeEvent()
+    public function expirationProvider()
     {
-        return $this->event;
+        return [
+            [
+                'exp_month'  => 1,
+                'exp_year'   => 2013,
+                'is_expired' => true
+            ],
+            [
+                'exp_month'  => 4,
+                'exp_year'   => 2999,
+                'is_expired' => false
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider expirationProvider
+     */
+    public function testExpirationDate($expMonth, $expYear, $isExpired)
+    {
+        $card = new Card();
+        $card->setExpMonth($expMonth);
+        $card->setExpYear($expYear);
+
+        $this->assertEquals($isExpired, $card->isExpired());
     }
 }

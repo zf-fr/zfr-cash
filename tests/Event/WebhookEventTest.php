@@ -16,40 +16,15 @@
  * and is licensed under the MIT license.
  */
 
-namespace ZfrCash\Event;
+namespace ZfrCashTest\Event;
 
-use Zend\EventManager\Event;
+use ZfrCash\Event\WebhookEvent;
 
-/**
- * Event that contains data about a Stripe webhook event
- *
- * @author Michaël Gallego <mic.gallego@gmail.com>
- */
-class WebhookEvent extends Event
+class WebhookEventTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Constant(s) name(s) for events
-     */
-    const WEBHOOK_RECEIVED = 'stripe_webhook.received';
-
-    /**
-     * @var array
-     */
-    private $event;
-
-    /**
-     * @param array   $event
-     */
-    public function __construct(array $event)
+    public function testEvent()
     {
-        $this->event = $event;
-    }
-
-    /**
-     * @return array
-     */
-    public function getStripeEvent()
-    {
-        return $this->event;
+        $event = new WebhookEvent(['foo' => 'bar']);
+        $this->assertEquals(['foo' => 'bar'], $event->getStripeEvent());
     }
 }
