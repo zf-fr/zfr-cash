@@ -52,6 +52,11 @@ class SubscriptionDiscountServiceFactory implements FactoryInterface
         /** @var StripeClient $stripeClient */
         $stripeClient = $serviceLocator->get(StripeClient::class);
 
-        return new SubscriptionDiscountService($objectManager, $subscriptionDiscountRepository, $subscriptionRepository, $stripeClient);
+        return new SubscriptionDiscountService(
+            $objectManager,
+            $subscriptionDiscountRepository,
+            $subscriptionRepository,
+            $stripeClient
+        );
     }
 }

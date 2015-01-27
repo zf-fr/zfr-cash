@@ -31,7 +31,7 @@ use ZfrStripe\Exception\NotFoundException as StripeNotFoundException;
  * @author  Michaël Gallego <mic.gallego@gmail.com>
  * @licence MIT
  */
-class CustomerDiscountService 
+class CustomerDiscountService
 {
     use DiscountPopulatorTrait;
 

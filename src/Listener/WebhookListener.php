@@ -74,7 +74,11 @@ final class WebhookListener extends AbstractListenerAggregate
     public function attach(EventManagerInterface $eventManager)
     {
         $sharedManager = $eventManager->getSharedManager();
-        $sharedManager->attach(WebhookListenerController::class, WebhookEvent::WEBHOOK_RECEIVED, [$this, 'dispatchWebhook']);
+        $sharedManager->attach(
+            WebhookListenerController::class,
+            WebhookEvent::WEBHOOK_RECEIVED,
+            [$this, 'dispatchWebhook']
+        );
     }
 
     /**

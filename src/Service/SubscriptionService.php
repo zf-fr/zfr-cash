@@ -109,8 +109,12 @@ class SubscriptionService
             'coupon'                  => isset($options['coupon']) ? $options['coupon'] : null,
             'tax_percent'             => isset($options['tax_percent']) ? $options['tax_percent'] : null,
             'trial_end'               => isset($options['trial_end']) ? $options['trial_end']->getTimestamp() : null,
-            'application_fee_percent' => isset($options['application_fee_percent']) ? $options['application_fee_percent'] : null,
-            'billing_cycle_anchor'    => isset($options['billing_cycle_anchor']) ? $options['billing_cycle_anchor']->getTimestamp() : null,
+            'application_fee_percent' => isset($options['application_fee_percent'])
+                ? $options['application_fee_percent']
+                : null,
+            'billing_cycle_anchor'    => isset($options['billing_cycle_anchor'])
+                ? $options['billing_cycle_anchor']->getTimestamp()
+                : null,
             'metadata'                => isset($options['metadata']) ? $options['metadata'] : null,
             'idempotency_key'         => isset($options['idempotency_key']) ? $options['idempotency_key'] : null
         ]));
