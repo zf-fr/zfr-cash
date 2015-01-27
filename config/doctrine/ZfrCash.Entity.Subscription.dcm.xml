@@ -22,7 +22,7 @@
             <join-column on-delete="CASCADE" />
         </many-to-one>
 
-        <one-to-one field="discount" target-entity="ZfrCash\Entity\SubscriptionDiscount" inversed-by="discount">
+        <one-to-one field="discount" target-entity="ZfrCash\Entity\SubscriptionDiscount" inversed-by="subscription">
             <cascade>
                 <cascade-persist />
             </cascade>
