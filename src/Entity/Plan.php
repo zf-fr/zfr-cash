@@ -255,8 +255,7 @@ class Plan
         $this->metadata->clear();
 
         foreach ($metadata as $metadatum) {
-            $metadatum->setPlan($this);
-            $this->metadata->add($metadatum);
+            $this->addMetadata($metadatum);
         }
     }
 
@@ -265,6 +264,7 @@ class Plan
      */
     public function addMetadata(PlanMetadata $metadatum)
     {
+        $metadatum->setPlan($this);
         $this->metadata->add($metadatum);
     }
 

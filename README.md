@@ -1,5 +1,11 @@
 # ZfrCash
 
+[![Master branch build status](https://secure.travis-ci.org/doctrine/DoctrineORMModule.png?branch=master)](http://travis-ci.org/doctrine/DoctrineORMModule)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zf-fr/zfr-cash/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/zf-fr/zfr-cash/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/zf-fr/zfr-cash/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/zf-fr/zfr-cash/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/zfr/zfr-cash/v/stable.svg)](https://packagist.org/packages/zfr/zfr-cash)
+[![Total Downloads](https://poser.pugx.org/zfr/zfr-cash/downloads.svg)](https://packagist.org/packages/zfr/zfr-cash)
+
 ZfrCash is a high level Zend Framework 2 module that simplify how you handle payments. It internally uses Stripe as
 the payment gateway, using [ZfrStripe](https://github.com/zf-fr/zfr-stripe).
 
@@ -380,6 +386,7 @@ plan, and options. Supported options are:
 
 * `tax_percent`: allow to set a tax that will be applied in addition of normal plan price
 * `quantity`: set a quantity for the plan
+* `coupon`: set a coupon for the given subscription only
 * `trial_end`: a DateTime that represents that allows to manually set an trial date
 * `application_fee_percent`: if you are creating subscription on behalf of other through Stripe Connect
 * `billing_cycle_anchor`: a DateTime that defines when to start the recurring payments

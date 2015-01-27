@@ -40,14 +40,14 @@ trait CustomerTrait
     /**
      * @var Card|null
      *
-     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Card", inversedBy="owner")
+     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\Card", inversedBy="owner", cascade={"persist"})
      */
     protected $card;
 
     /**
      * @var CustomerDiscount|null
      *
-     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\CustomerDiscount", inversedBy="customer")
+     * @ORM\OneToOne(targetEntity="ZfrCash\Entity\CustomerDiscount", inversedBy="customer", cascade={"persist"})
      */
     protected $discount;
 

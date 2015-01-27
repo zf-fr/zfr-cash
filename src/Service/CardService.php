@@ -72,6 +72,8 @@ class CardService
     public function attachToCustomer(CustomerInterface $customer, $card)
     {
         if ($previousCard = $customer->getCard()) {
+            // NOTE: there is no need to delete the old card from Stripe because the `updateCustomer` endpoint
+            // delete the old card from Stripe
             $this->objectManager->remove($previousCard);
         }
 
@@ -98,18 +100,6 @@ class CardService
 
         $this->objectManager->persist($newCard);
         $this->objectManager->flush();
-
-        // The new card has been set, so we can safely delete the old one from Stripe if existing
-        if (null !== $previousCard) {
-            try {
-                $this->stripeClient->deleteCard([
-                    'id'       => $previousCard->getStripeId(),
-                    'customer' => $customer->getStripeId()
-                ]);
-            } catch (StripeNotFoundException $exception) {
-                // The card may have been removed manually from Stripe, but we still need to remove it from database
-            }
-        }
 
         return $newCard;
     }

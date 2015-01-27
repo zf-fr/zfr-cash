@@ -79,6 +79,7 @@ class PlanService
     {
         // The first API call to Stripe is used to reset the Stripe metadata
         $this->stripeClient->updatePlan([
+            'id'       => $plan->getStripeId(),
             'name'     => $plan->getName(),
             'metadata' => []
         ]);
@@ -91,6 +92,7 @@ class PlanService
 
         if (!empty($metadata)) {
             $this->stripeClient->updatePlan([
+                'id'       => $plan->getStripeId(),
                 'metadata' => $metadata
             ]);
         }

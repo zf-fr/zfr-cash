@@ -106,15 +106,6 @@ class CardServiceTest extends PHPUnit_Framework_TestCase
 
         $this->stripeClient->expects($this->once())->method('updateCustomer')->willReturn($stripeCustomer);
 
-        if ($hasExistingCard) {
-            $this->stripeClient->expects($this->once())->method('deleteCard')->with([
-                'id'       => 'card_abc',
-                'customer' => $stripeCustomerId
-            ]);
-        } else {
-            $this->stripeClient->expects($this->never())->method('deleteCard');
-        }
-
         $card = $this->cardService->attachToCustomer($customer, 'tok_def');
 
         $this->assertInstanceOf(Card::class, $card);

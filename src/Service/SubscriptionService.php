@@ -24,6 +24,8 @@ use ZfrCash\Entity\BillableInterface;
 use ZfrCash\Entity\CustomerInterface;
 use ZfrCash\Entity\Plan;
 use ZfrCash\Entity\Subscription;
+use ZfrCash\Entity\SubscriptionDiscount;
+use ZfrCash\Populator\DiscountPopulatorTrait;
 use ZfrCash\Populator\SubscriptionPopulatorTrait;
 use ZfrCash\Repository\BillableRepositoryInterface;
 use ZfrStripe\Client\StripeClient;
@@ -38,6 +40,7 @@ use ZfrStripe\Exception\NotFoundException as StripeNotFoundException;
 class SubscriptionService
 {
     use SubscriptionPopulatorTrait;
+    use DiscountPopulatorTrait;
 
     /**
      * @var ObjectManager
@@ -84,6 +87,7 @@ class SubscriptionService
      *
      *      - tax_percent: allow to set a tax that will be applied in addition of normal plan price
      *      - quantity: set a quantity for the plan
+     *      - coupon: a coupon to attach to the subscription
      *      - trial_end: a DateTime that represents that allows to manually set an trial date
      *      - application_fee_percent: if you are creating subscription on behalf of other through Stripe Connect
      *      - billing_cycle_anchor: a DateTime to define when the subscription must start its recurring period
@@ -102,6 +106,7 @@ class SubscriptionService
             'customer'                => $customer->getStripeId(),
             'plan'                    => $plan->getStripeId(),
             'quantity'                => isset($options['quantity']) ? (int) $options['quantity'] : null,
+            'coupon'                  => isset($options['coupon']) ? $options['coupon'] : null,
             'tax_percent'             => isset($options['tax_percent']) ? $options['tax_percent'] : null,
             'trial_end'               => isset($options['trial_end']) ? $options['trial_end']->getTimestamp() : null,
             'application_fee_percent' => isset($options['application_fee_percent']) ? $options['application_fee_percent'] : null,
@@ -121,6 +126,14 @@ class SubscriptionService
         $subscription = new Subscription();
         $subscription->setPayer($customer);
         $subscription->setPlan($plan);
+
+        if (null !== $stripeSubscription['discount']) {
+            $discount = new SubscriptionDiscount();
+            $discount->setSubscription($subscription);
+            $discount->setCustomer($customer);
+
+            $this->populateDiscountFromStripeResource($discount, $stripeSubscription['discount']);
+        }
 
         $this->populateSubscriptionFromStripeResource($subscription, $stripeSubscription);
 
@@ -185,6 +198,8 @@ class SubscriptionService
             'plan'     => $plan->getStripeId(),
             'prorate'  => (bool) $prorate
         ]);
+
+        $subscription->setPlan($plan);
 
         $this->populateSubscriptionFromStripeResource($subscription, $stripeSubscription);
 
