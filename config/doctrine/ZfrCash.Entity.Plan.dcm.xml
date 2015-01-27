@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="ZfrCash\Entity\Plan" table="cash_plans">
+        <unique-constraints>
+            <unique-constraint name="UNIQ_STRIPE_ID_CREATED_AT" columns="stripe_id,created_at" />
+        </unique-constraints>
+
+        <id name="id" type="integer">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="stripeId" column="stripe_id" type="string" length="255">
+            <options>
+                <option name="collation">utf8_bin</option>
+            </options>
+        </field>
+
+        <field name="name" type="string" length="255" />
+        <field name="amount" type="integer" />
+        <field name="currency" type="string" length="3" />
+        <field name="interval" column="`interval`" type="string" length="5" />
+        <field name="intervalCount" column="interval_count" type="smallint" />
+        <field name="trialPeriodDays" column="trial_period_days" type="smallint" nullable="true" />
+        <one-to-many field="metadata" target-entity="ZfrCash\Entity\PlanMetadata" fetch="EAGER" mapped-by="plan" orphan-removal="true">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-many>
+        <field name="createdAt" column="created_at" type="datetime" />
+        <field name="active" column="active" type="boolean" />
+    </entity>
+</doctrine-mapping>

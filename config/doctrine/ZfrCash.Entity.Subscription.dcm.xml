@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="ZfrCash\Entity\Subscription" table="cash_subscriptions">
+        <id name="id" type="integer">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="stripeId" column="stripe_id" type="string" length="255" unique="true">
+            <options>
+                <option name="collation">utf8_bin</option>
+            </options>
+        </field>
+
+        <many-to-one field="plan" target-entity="ZfrCash\Entity\Plan" />
+
+        <many-to-one field="payer" target-entity="ZfrCash\Entity\CustomerInterface">
+            <join-column on-delete="CASCADE" />
+        </many-to-one>
+
+        <one-to-one field="discount" target-entity="ZfrCash\Entity\SubscriptionDiscount">
+            <cascade>
+                <cascade-persist />
+            </cascade>
+        </one-to-one>
+
+        <field name="quantity" type="integer" />
+        <field name="taxPercent" column="tax_percent" type="decimal" precision="5" scale="2" />
+        <field name="currentPeriodStart" column="current_period_start" type="datetime" />
+        <field name="currentPeriodEnd" column="current_period_end" type="datetime" />
+        <field name="trialStart" column="trial_start" type="datetime" nullable="true" />
+        <field name="trialEnd" column="trial_end" type="datetime" nullable="true" />
+        <field name="cancelledAt" column="cancelled_at" type="datetime" nullable="true" />
+        <field name="endedAt" column="ended_at" type="datetime" nullable="true" />
+        <field name="status" type="string" length="20" />
+    </entity>
+</doctrine-mapping>
