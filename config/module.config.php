@@ -35,8 +35,15 @@ use ZfrCash\Service\CustomerService;
 use ZfrCash\Service\PlanService;
 use ZfrCash\Service\SubscriptionDiscountService;
 use ZfrCash\Service\SubscriptionService;
+use ZfrCash\Validator\ViesValidator;
 
 return [
+    /**
+     * --------------------------------------------------------------------------------
+     * SERVICE MANAGER CONFIGURATION
+     * --------------------------------------------------------------------------------
+     */
+
     'service_manager' => [
         'factories' => [
             CardService::class                 => CardServiceFactory::class,
@@ -49,6 +56,32 @@ return [
             WebhookListener::class             => WebhookListenerFactory::class
         ]
     ],
+
+    /**
+     * --------------------------------------------------------------------------------
+     * DOCTRINE CONFIGURATION
+     * --------------------------------------------------------------------------------
+     */
+
+    'doctrine' => [
+        'driver' => [
+            'zfr_cash_driver' => [
+                'class' => XmlDriver::class,
+                'paths' => __DIR__ . '/doctrine',
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    'ZfrCash\Entity' => 'zfr_cash_driver',
+                ],
+            ],
+        ],
+    ],
+
+    /**
+     * --------------------------------------------------------------------------------
+     * ROUTER CONFIGURATION
+     * --------------------------------------------------------------------------------
+     */
 
     'router' => [
         'routes' => [
@@ -85,25 +118,35 @@ return [
         ]
     ],
 
+    /**
+     * --------------------------------------------------------------------------------
+     * CONTROLLERS CONFIGURATION
+     * --------------------------------------------------------------------------------
+     */
+
     'controllers' => [
         'factories' => [
             WebhookListenerController::class => WebhookListenerControllerFactory::class
         ]
     ],
 
-    'doctrine' => [
-        'driver' => [
-            'zfr_cash_driver' => [
-                'class' => XmlDriver::class,
-                'paths' => __DIR__ . '/doctrine',
-            ],
-            'orm_default' => [
-                'drivers' => [
-                    'ZfrCash\Entity' => 'zfr_cash_driver',
-                ],
-            ],
-        ],
+    /**
+     * --------------------------------------------------------------------------------
+     * VALIDATORS CONFIGURATION
+     * --------------------------------------------------------------------------------
+     */
+
+    'validators' => [
+        'invokables' => [
+            ViesValidator::class => ViesValidator::class
+        ]
     ],
+
+    /**
+     * --------------------------------------------------------------------------------
+     * ZFR CASH CONFIGURATION
+     * --------------------------------------------------------------------------------
+     */
 
     'zfr_cash' => [
         // Object manager key

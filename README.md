@@ -554,3 +554,37 @@ Finally, the service offers several getters you can use:
 
 * `getById`: get the discount by its id
 * `getBySubscription`: get the discount of a given subscription
+
+### MISC
+
+ZfrCash comes with a validator for european VAT numbers (VIES). For instance, if you have an input filter, you
+can add the validator:
+
+```php
+$inputFilter->add([
+    'name'       => 'tax_number',
+    'required'   => false,
+    'validators' => [
+        ['name' => ViesValidator::class]
+    ]
+]);
+```
+
+By default, the validator only follow rules for correct format, but do not enforce the real existence of the VAT
+number. This needs to do an additional call to the VIES webservice. To enable this, you can use the option
+`check_existence`:
+
+```php
+$inputFilter->add([
+    'name'       => 'tax_number',
+    'required'   => false,
+    'validators' => [
+        [
+            'name'    => ViesValidator::class,
+            'options' => ['check_existence' => true]
+        ]
+    ]
+]);
+```
+
+However, please note that from my experience, the VIES webservice is HIGHLY unreliable and often fails.
