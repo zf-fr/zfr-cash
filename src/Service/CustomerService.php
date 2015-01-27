@@ -106,8 +106,8 @@ class CustomerService
         // If an idempotency key is given, this means that the user explicitly want to protect the POST operation,
         // hence this means that the subscription may have already been created, if that's the case we just return it
         if (isset($options['idempotency_key'])) {
-            if ($customer = $this->customerRepository->findOneByStripeId($stripeCustomer['id'])) {
-                return $customer;
+            if ($existingCustomer = $this->customerRepository->findOneByStripeId($stripeCustomer['id'])) {
+                return $existingCustomer;
             }
         }
 
