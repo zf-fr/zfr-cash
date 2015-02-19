@@ -77,19 +77,39 @@ class CardService
             $this->objectManager->remove($previousCard);
         }
 
-        // This call always set the new card as the default one
-        $stripeCustomer = $this->stripeClient->updateCustomer([
-            'id'   => $customer->getStripeId(),
-            'card' => $card
-        ]);
+        $stripeApiVersion = $this->stripeClient->getApiVersion();
 
-        // Extract the main card from the list of cards
-        $stripeDefaultCard = [];
+        // This call always set the new card as the default one. Note that starting from 2015-02-18 version,
+        // Stripe uses a "source" parameter instead of "card" parameter
+        if ($stripeApiVersion < '2015-02-18') {
+            $stripeCustomer = $this->stripeClient->updateCustomer([
+                'id'   => $customer->getStripeId(),
+                'card' => $card
+            ]);
 
-        foreach ($stripeCustomer['cards']['data'] as $stripeCard) {
-            if ($stripeCard['id'] === $stripeCustomer['default_card']) {
-                $stripeDefaultCard = $stripeCard;
-                break;
+            // Extract the main card from the list of cards
+            $stripeDefaultCard = [];
+
+            foreach ($stripeCustomer['cards']['data'] as $stripeCard) {
+                if ($stripeCard['id'] === $stripeCustomer['default_card']) {
+                    $stripeDefaultCard = $stripeCard;
+                    break;
+                }
+            }
+        } else {
+            $stripeCustomer = $this->stripeClient->updateCustomer([
+                'id'     => $customer->getStripeId(),
+                'source' => $card
+            ]);
+
+            // Extract the main card from the list of cards
+            $stripeDefaultCard = [];
+
+            foreach ($stripeCustomer['sources']['data'] as $stripeSource) {
+                if ($stripeSource['id'] === $stripeCustomer['default_source']) {
+                    $stripeDefaultCard = $stripeSource;
+                    break;
+                }
             }
         }
 

@@ -53,7 +53,13 @@ class CardServiceTest extends PHPUnit_Framework_TestCase
     {
         $this->objectManager = $this->getMock(ObjectManager::class);
         $this->cardRepository = $this->getMock(ObjectRepository::class);
-        $this->stripeClient   = $this->getMock(StripeClient::class, ['updateCustomer', 'deleteCard'], [], '', false);
+        $this->stripeClient   = $this->getMock(
+            StripeClient::class,
+            ['updateCustomer', 'deleteCard', 'getApiVersion'],
+            [],
+            '',
+            false
+        );
 
         $this->cardService = new CardService($this->objectManager, $this->cardRepository, $this->stripeClient);
     }
@@ -71,8 +77,10 @@ class CardServiceTest extends PHPUnit_Framework_TestCase
      *
      * @param bool $hasExistingCard
      */
-    public function testAssertCanAttachCard($hasExistingCard)
+    public function testAssertCanAttachCardForOldStripeVersion($hasExistingCard)
     {
+        $this->stripeClient->expects($this->once())->method('getApiVersion')->willReturn('2015-02-16');
+
         $customer     = $this->getMock(CustomerInterface::class);
         $existingCard = $hasExistingCard ? new Card() : null;
 
@@ -102,6 +110,53 @@ class CardServiceTest extends PHPUnit_Framework_TestCase
                 ]
             ],
             'default_card' => 'card_def'
+        ];
+
+        $this->stripeClient->expects($this->once())->method('updateCustomer')->willReturn($stripeCustomer);
+
+        $card = $this->cardService->attachToCustomer($customer, 'tok_def');
+
+        $this->assertInstanceOf(Card::class, $card);
+    }
+
+    /**
+     * @dataProvider attachProvider
+     *
+     * @param bool $hasExistingCard
+     */
+    public function testAssertCanAttachCardForNewVersion($hasExistingCard)
+    {
+        $this->stripeClient->expects($this->once())->method('getApiVersion')->willReturn('2015-02-18');
+
+        $customer     = $this->getMock(CustomerInterface::class);
+        $existingCard = $hasExistingCard ? new Card() : null;
+
+        if ($hasExistingCard) {
+            $existingCard->setStripeId('card_abc');
+            $existingCard->setOwner($customer);
+
+            $this->objectManager->expects($this->once())->method('remove')->with($existingCard);
+            $customer->expects($this->once())->method('getCard')->willReturn($existingCard);
+        }
+
+        $stripeCustomerId = 'cus_abc';
+
+        $customer->expects($this->any())->method('getStripeId')->willReturn($stripeCustomerId);
+
+        $stripeCustomer = [
+            'sources' => [
+                'data' => [
+                    [
+                        'id'        => 'card_def',
+                        'brand'     => 'visa',
+                        'exp_month' => 2,
+                        'exp_year'  => 2018,
+                        'last4'     => '0234',
+                        'country'   => 'FR'
+                    ]
+                ]
+            ],
+            'default_source' => 'card_def'
         ];
 
         $this->stripeClient->expects($this->once())->method('updateCustomer')->willReturn($stripeCustomer);

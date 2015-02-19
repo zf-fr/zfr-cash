@@ -43,7 +43,7 @@ class CardPopulatorTraitTest extends PHPUnit_Framework_TestCase
             'exp_month' => 2,
             'exp_year'  => 2018,
             'last4'     => '0234',
-            'country'   => 'FR'
+            'country'   => 'fr'
         ];
 
         $reflMethod->invoke($populator, $card, $stripeCard);

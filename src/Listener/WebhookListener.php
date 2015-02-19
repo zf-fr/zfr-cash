@@ -98,6 +98,7 @@ final class WebhookListener extends AbstractListenerAggregate
                 return $this->handleDiscountEvent($event->getStripeEvent());
 
             case 'customer.card.updated':
+            case 'customer.source.updated': // Compatibility for Stripe API >= 2015-02-18
                 return $this->handleCardEvent($event->getStripeEvent());
 
             case 'customer.subscription.updated':

@@ -205,9 +205,10 @@ By default, ZfrCash will listen to the following events, and take some actions:
 various discount events (both for subscription discounts and customer discounts). This means you can create/update/remove
 a discount right into the Stripe UI, and it will be automatically persisted into your database. Alternatively, you can
 also create/update/remove a discount in your code, using services.
-* `customer.card.updated`: since January 2015, Stripe can automatically updates your Stripe customers' card, without
-them to manually update their card. As a consequence, ZfrCash automatically update the card. Alternatively, you can
-create or remove a card into your code.
+* `customer.card.updated` or `customer.source.updated`: since January 2015, Stripe can automatically updates
+your Stripe customers' card, without them to manually update their card. As a consequence, ZfrCash automatically
+update the card. Alternatively, you can create or remove a card into your code. If you are using an API version newer
+or equal than 2015-02-18, you must use `customer.source.updated`, otherwise `customer.card.updated`.
 * `customer.subscription.updated`, `customer.subscription.deleted`: when your subscription renews, ZfrCash
 automatically updates the various subscription properties (like `current_period_start` and `current_period_end`).
 It also deletes the subscription for your database if it is deleted from Stripe. Alternatively, you can create,
@@ -318,7 +319,8 @@ class UserController extends AbstractActionController
 		$discount  = $this->params()->fromQuery('discount');
 		
 		$user = $this->customerService->create($user, [
-			'card'     => $cardToken,
+			'card'     => $cardToken, // If Stripe API version is older than 2015-02-18
+			'source'   => $cardToken, // If Stripe API version is newer or equal than 2015-02-18
 			'discount' => $discount,
 			'email'    => $user->getEmail()
 		]);
@@ -330,7 +332,10 @@ Supported options are:
 
 * `email`: set the email Stripe attribute
 * `description`: set the description Stripe attribute
-* `card`: can either be a card token (created using Stripe.JS) or a full hash containing card properties.
+* `card`: can either be a card token (created using Stripe.JS) or a full hash containing card properties. This must
+be used in place of `source` for API version of Stripe older than 2015-02-18.
+* `source`: can either be a card token (created using Stripe.JS) or a full hash containing card properties. This
+must be used in place of `card` for API version of Stripe newer or equal than 2015-02-18.
 * `coupon`: a coupon to attach to the customer
 * `metadata`: a key value that set the metadata Stripe attributes
 * `idempotency_key`: a key that is used to prevent an operation for being executed twice

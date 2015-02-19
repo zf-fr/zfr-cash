@@ -38,6 +38,6 @@ trait CardPopulatorTrait
         $card->setExpMonth($stripeCard['exp_month']);
         $card->setExpYear($stripeCard['exp_year']);
         $card->setLast4($stripeCard['last4']);
-        $card->setCountry($stripeCard['country']);
+        $card->setCountry(strtolower($stripeCard['country']));
     }
 }

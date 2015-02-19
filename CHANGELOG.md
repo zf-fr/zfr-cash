@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+* Add compatibility with the new `2015-02-18` Stripe API version. This change removes the "card" concept in favour
+of a more abstract "source" concept. ZfrCash will automatically use the right calls based on your set API version.
+
 ## 1.0.0
 
 * First official release

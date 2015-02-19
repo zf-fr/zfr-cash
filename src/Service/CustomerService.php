@@ -81,7 +81,8 @@ class CustomerService
      * You can pass an optional card token (created using Stripe.js), an optional coupon and some additional
      * options. Supported options are:
      *
-     *    - card: the Card token (or an array of card properties)
+     *    - card: the Card token (or an array of card properties) - only for API version older than 2015-02-18
+     *    - source: a Card token (or an array of card properties) - only for API version newer or equal than 2015-02-18
      *    - coupon: an optional coupon
      *    - email: set as the "email" field in Stripe
      *    - description: set as the "description" field in Stripe
@@ -94,14 +95,22 @@ class CustomerService
      */
     public function create(CustomerInterface $customer, array $options = [])
     {
-        $stripeCustomer = $this->stripeClient->createCustomer(array_filter([
-            'card'            => isset($options['card']) ? $options['card'] : null,
+        $apiVersion = $this->stripeClient->getApiVersion();
+        $payload    = [
             'coupon'          => isset($options['coupon']) ? $options['coupon'] : null,
             'description'     => isset($options['description']) ? $options['description'] : null,
             'email'           => isset($options['email']) ? $options['email'] : null,
             'metadata'        => isset($options['metadata']) ? $options['metadata'] : null,
             'idempotency_key' => isset($options['idempotency_key']) ? $options['idempotency_key'] : null
-        ]));
+        ];
+
+        if ($apiVersion < '2015-02-18') {
+            $payload['card'] = isset($options['card']) ? $options['card'] : null;
+        } else {
+            $payload['source'] = isset($options['source']) ? $options['source'] : null;
+        }
+
+        $stripeCustomer = $this->stripeClient->createCustomer(array_filter($payload));
 
         // If an idempotency key is given, this means that the user explicitly want to protect the POST operation,
         // hence this means that the subscription may have already been created, if that's the case we just return it
@@ -113,11 +122,13 @@ class CustomerService
 
         $customer->setStripeId($stripeCustomer['id']);
 
-        if (!empty($stripeCustomer['cards']['data'])) {
+        $cards = ($apiVersion < '2015-02-18') ? $stripeCustomer['cards']['data'] : $stripeCustomer['sources']['data'];
+
+        if (!empty($cards)) {
             $card = new Card();
             $customer->setCard($card);
 
-            $this->populateCardFromStripeResource($card, current($stripeCustomer['cards']['data']));
+            $this->populateCardFromStripeResource($card, current($cards));
         }
 
         if (null !== $stripeCustomer['discount']) {
