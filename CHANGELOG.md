@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+* Revert uppercase for country code
+
 ## 1.1.0
 
 * Add compatibility with the new `2015-02-18` Stripe API version. This change removes the "card" concept in favour
