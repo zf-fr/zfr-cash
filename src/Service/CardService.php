@@ -86,30 +86,22 @@ class CardService
                 'id'   => $customer->getStripeId(),
                 'card' => $card
             ]);
-
-            // Extract the main card from the list of cards
-            $stripeDefaultCard = [];
-
-            foreach ($stripeCustomer['cards']['data'] as $stripeCard) {
-                if ($stripeCard['id'] === $stripeCustomer['default_card']) {
-                    $stripeDefaultCard = $stripeCard;
-                    break;
-                }
-            }
         } else {
             $stripeCustomer = $this->stripeClient->updateCustomer([
                 'id'     => $customer->getStripeId(),
                 'source' => $card
             ]);
+        }
 
-            // Extract the main card from the list of cards
-            $stripeDefaultCard = [];
+        // Extract the main card from the list of cards
+        $stripeDefaultCard = [];
 
-            foreach ($stripeCustomer['sources']['data'] as $stripeSource) {
-                if ($stripeSource['id'] === $stripeCustomer['default_source']) {
-                    $stripeDefaultCard = $stripeSource;
-                    break;
-                }
+        // Note that for compatibility purposes, Stripe output the "sources" even on older versions of the API,
+        // so we do not need to branch here
+        foreach ($stripeCustomer['sources']['data'] as $stripeCard) {
+            if ($stripeCard['id'] === $stripeCustomer['default_source']) {
+                $stripeDefaultCard = $stripeCard;
+                break;
             }
         }
 

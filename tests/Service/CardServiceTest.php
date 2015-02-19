@@ -97,7 +97,7 @@ class CardServiceTest extends PHPUnit_Framework_TestCase
         $customer->expects($this->any())->method('getStripeId')->willReturn($stripeCustomerId);
 
         $stripeCustomer = [
-            'cards' => [
+            'sources' => [
                 'data' => [
                     [
                         'id'        => 'card_def',
@@ -109,10 +109,13 @@ class CardServiceTest extends PHPUnit_Framework_TestCase
                     ]
                 ]
             ],
-            'default_card' => 'card_def'
+            'default_source' => 'card_def'
         ];
 
-        $this->stripeClient->expects($this->once())->method('updateCustomer')->willReturn($stripeCustomer);
+        $this->stripeClient->expects($this->once())
+                           ->method('updateCustomer')
+                           ->with(['id' => 'cus_abc', 'card' => 'tok_def'])
+                           ->willReturn($stripeCustomer);
 
         $card = $this->cardService->attachToCustomer($customer, 'tok_def');
 
@@ -159,7 +162,10 @@ class CardServiceTest extends PHPUnit_Framework_TestCase
             'default_source' => 'card_def'
         ];
 
-        $this->stripeClient->expects($this->once())->method('updateCustomer')->willReturn($stripeCustomer);
+        $this->stripeClient->expects($this->once())
+                           ->method('updateCustomer')
+                           ->with(['id' => 'cus_abc', 'source' => 'tok_def'])
+                           ->willReturn($stripeCustomer);
 
         $card = $this->cardService->attachToCustomer($customer, 'tok_def');
 

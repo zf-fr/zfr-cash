@@ -122,13 +122,11 @@ class CustomerService
 
         $customer->setStripeId($stripeCustomer['id']);
 
-        $cards = ($apiVersion < '2015-02-18') ? $stripeCustomer['cards']['data'] : $stripeCustomer['sources']['data'];
-
-        if (!empty($cards)) {
+        if (!empty($stripeCustomer['sources']['data'])) {
             $card = new Card();
             $customer->setCard($card);
 
-            $this->populateCardFromStripeResource($card, current($cards));
+            $this->populateCardFromStripeResource($card, current($stripeCustomer['sources']['data']));
         }
 
         if (null !== $stripeCustomer['discount']) {
