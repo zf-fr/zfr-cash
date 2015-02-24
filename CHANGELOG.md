@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+
+* Update mapping so that when fetching a subscription, plan and (eventual) discount are loaded eagerly instead of
+being lazy-loaded. The reason is that most of the time, the subscription is fetched in order to be shown with all
+the information linked to it.
+
 ## 1.1.1
 
 * Revert uppercase for country code

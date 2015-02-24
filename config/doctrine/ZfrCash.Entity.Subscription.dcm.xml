@@ -16,13 +16,13 @@
             </options>
         </field>
 
-        <many-to-one field="plan" target-entity="ZfrCash\Entity\Plan" />
+        <many-to-one field="plan" target-entity="ZfrCash\Entity\Plan" fetch="EAGER" />
 
         <many-to-one field="payer" target-entity="ZfrCash\Entity\CustomerInterface">
             <join-column on-delete="CASCADE" />
         </many-to-one>
 
-        <one-to-one field="discount" target-entity="ZfrCash\Entity\SubscriptionDiscount" inversed-by="subscription">
+        <one-to-one field="discount" target-entity="ZfrCash\Entity\SubscriptionDiscount" inversed-by="subscription" fetch="EAGER">
             <cascade>
                 <cascade-persist />
             </cascade>

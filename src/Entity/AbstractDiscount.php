@@ -72,6 +72,22 @@ abstract class AbstractDiscount
     }
 
     /**
+     * @param CustomerInterface $customer
+     */
+    public function setCustomer($customer)
+    {
+        $this->customer = $customer;
+    }
+
+    /**
+     * @return CustomerInterface
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
      * @param Coupon $coupon
      */
     public function setCoupon(Coupon $coupon)

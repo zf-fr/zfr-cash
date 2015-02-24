@@ -30,14 +30,6 @@ class CustomerDiscount extends AbstractDiscount
     public function setCustomer($customer)
     {
         $customer->setDiscount($this);
-        $this->customer = $customer;
-    }
-
-    /**
-     * @return CustomerInterface
-     */
-    public function getCustomer()
-    {
-        return $this->customer;
+        parent::setCustomer($customer);
     }
 }
