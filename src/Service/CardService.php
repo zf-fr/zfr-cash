@@ -160,7 +160,7 @@ class CardService
      */
     public function getOneByCustomer(CustomerInterface $customer)
     {
-        return $this->cardRepository->findOneBy(['customer' => $customer]);
+        return $this->cardRepository->findOneBy(['owner' => $customer]);
     }
 
     /**

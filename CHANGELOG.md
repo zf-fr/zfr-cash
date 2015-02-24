@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+* Fix a bug when using the method `getOneByCustomer` on card service
+
 ## 1.2.0
 
 * Update mapping so that when fetching a subscription, plan and (eventual) discount are loaded eagerly instead of
