@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2
+
+* Fix logic for the `isExpired` method on card entity
+
 ## 1.2.1
 
 * Fix a bug when using the method `getOneByCustomer` on card service

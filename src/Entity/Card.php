@@ -198,7 +198,7 @@ class Card
         }
 
         if ($currentYear === $this->expYear) {
-            return $currentMonth <= $this->expMonth;
+            return $this->expMonth < $currentMonth;
         }
 
         return true;
