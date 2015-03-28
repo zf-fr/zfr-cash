@@ -276,29 +276,29 @@ class SubscriptionService
      */
     public function syncFromStripeResource(array $stripeSubscription)
     {
-        if ($stripeSubscription['object'] !== 'subscription') {
+        if ($stripeSubscription['data']['object']['object'] !== 'subscription') {
             return;
         }
 
         /** @var Subscription $subscription */
-        $subscription = $this->subscriptionRepository->findOneBy(['stripe_id' => $stripeSubscription['id']]);
+        $subscription = $this->subscriptionRepository->findOneBy(['stripeId' => $stripeSubscription['data']['object']['id']]);
 
         if (null === $subscription) {
             return; // We do not handle creation
         }
 
         // If ended_at is not null, then the subscription has been removed completely
-        if (null !== $stripeSubscription['ended_at']) {
+        if (null !== $stripeSubscription['data']['object']['ended_at']) {
             $this->remove($subscription);
 
             return null;
         }
 
-        $this->populateSubscriptionFromStripeResource($subscription, $stripeSubscription);
+        $this->populateSubscriptionFromStripeResource($subscription, $stripeSubscription['data']['object']);
 
         $this->objectManager->flush();
     }
-
+    
     /**
      * Remove the subscription from database
      *
