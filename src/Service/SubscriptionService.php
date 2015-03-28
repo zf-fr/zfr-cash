@@ -281,7 +281,7 @@ class SubscriptionService
         }
 
         /** @var Subscription $subscription */
-        $subscription = $this->subscriptionRepository->findOneBy(['stripe_id' => $stripeSubscription['id']]);
+        $subscription = $this->subscriptionRepository->findOneBy(['stripeId' => $stripeSubscription['id']]);
 
         if (null === $subscription) {
             return; // We do not handle creation

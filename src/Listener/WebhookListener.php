@@ -152,9 +152,9 @@ final class WebhookListener extends AbstractListenerAggregate
             if (null !== $customer && ($discount = $customer->getDiscount())) {
                 $customerDiscountService->remove($discount);
             }
+        } else {
+            $customerDiscountService->syncFromStripeResource($stripeDiscount);
         }
-
-        $customerDiscountService->syncFromStripeResource($stripeEvent);
 
         return 'Event has been properly processed';
     }
@@ -179,9 +179,9 @@ final class WebhookListener extends AbstractListenerAggregate
             if (null !== $subscription && ($discount = $subscription->getDiscount())) {
                 $subscriptionDiscountService->remove($discount);
             }
+        } else {
+            $subscriptionDiscountService->syncFromStripeResource($stripeDiscount);
         }
-
-        $subscriptionDiscountService->syncFromStripeResource($stripeEvent);
 
         return 'Event has been properly processed';
     }
@@ -212,7 +212,7 @@ final class WebhookListener extends AbstractListenerAggregate
     {
         /** @var SubscriptionService $subscriptionService */
         $subscriptionService = $this->serviceLocator->get(SubscriptionService::class);
-        $subscriptionService->syncFromStripeResource($stripeEvent);
+        $subscriptionService->syncFromStripeResource($stripeEvent['data']['object']);
 
         return 'Event has been properly processed';
     }

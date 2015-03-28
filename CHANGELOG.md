@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.3
+
+* Fix a bug where discount webhook were not correctly handled, which resulted in updates not being updated
+* Fix a bug where subscription webhook were not correctly handled, which resulted in updates not being updated
+
 ## 1.2.2
 
 * Fix logic for the `isExpired` method on card entity
